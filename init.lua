@@ -229,6 +229,20 @@ require("lazy").setup({
     },
   },
 
+  -- Terminal
+  {
+    "akinsho/toggleterm.nvim",
+    config = function()
+      require("toggleterm").setup({
+        size = 15,
+        direction = "horizontal",
+        open_mapping = [[<C-t>]],
+        shade_terminals = true,
+        persist_size = true,
+      })
+    end,
+  },
+
   -- Buffer close
   {
     "famiu/bufdelete.nvim",
@@ -266,6 +280,9 @@ vim.keymap.set("n", "<C-h>", "<C-w>h", { silent = true })
 vim.keymap.set("n", "<C-j>", "<C-w>j", { silent = true })
 vim.keymap.set("n", "<C-k>", "<C-w>k", { silent = true })
 vim.keymap.set("n", "<C-l>", "<C-w>l", { silent = true })
+
+-- Exit terminal insert mode with Esc
+vim.keymap.set("t", "<Esc>", "<C-\\><C-n>", { silent = true })
 
 -- Toggle file explorer
 vim.keymap.set("n", "<C-b>", "<cmd>NvimTreeToggle<CR>", { silent = true })
