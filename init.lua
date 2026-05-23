@@ -86,7 +86,10 @@ require("lazy").setup({
       require("mason-lspconfig").setup({
         ensure_installed = {
           "clangd", "rust_analyzer", "pyright", "bashls",
-          "ts_ls", "html", "cssls", "lua_ls",
+          "ts_ls", "html", "cssls", "lua_ls", "jdtls",
+        },
+        automatic_enable = {
+          exclude = { "jdtls" },
         },
       })
 
@@ -126,9 +129,12 @@ require("lazy").setup({
           vim.keymap.set("n", "gd",         vim.lsp.buf.definition,                          opts)
           vim.keymap.set("n", "gI",         require("telescope.builtin").lsp_implementations, opts)
           vim.keymap.set("n", "gr",         require("telescope.builtin").lsp_references,      opts)
-          vim.keymap.set("n", "K",          vim.lsp.buf.hover,          opts)
-          vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename,         opts)
-          vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action,    opts)
+          vim.keymap.set("n", "K",          vim.lsp.buf.hover,               opts)
+          vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename,              opts)
+          vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action,         opts)
+          vim.keymap.set("n", "<leader>e",  vim.diagnostic.open_float,       opts)
+          vim.keymap.set("n", "]d",         vim.diagnostic.goto_next,        opts)
+          vim.keymap.set("n", "[d",         vim.diagnostic.goto_prev,        opts)
         end,
       })
 
@@ -138,6 +144,70 @@ require("lazy").setup({
       }) do
         vim.lsp.enable(server)
       end
+    end,
+  },
+
+  -- Java LSP
+  {
+    "mfussenegger/nvim-jdtls",
+    ft = "java",
+    config = function()
+      local data_path  = vim.fn.stdpath("data")
+      local mason_path = data_path .. "/mason/packages/jdtls"
+      local lombok_jar = data_path .. "/lombok.jar"
+      local launcher   = vim.fn.glob(mason_path .. "/plugins/org.eclipse.equinox.launcher_*.jar")
+
+      local function start_jdtls()
+        local project   = vim.fn.fnamemodify(vim.fn.getcwd(), ":p:h:t")
+        local workspace = data_path .. "/jdtls-workspaces/" .. project
+        require("jdtls").start_or_attach({
+          cmd = {
+            "java",
+            "-javaagent:" .. lombok_jar,
+            "-Declipse.application=org.eclipse.jdt.ls.core.id1",
+            "-Dosgi.bundles.defaultStartLevel=4",
+            "-Declipse.product=org.eclipse.jdt.ls.core.product",
+            "-Xmx2g",
+            "--add-modules=ALL-SYSTEM",
+            "--add-opens", "java.base/java.util=ALL-UNNAMED",
+            "--add-opens", "java.base/java.lang=ALL-UNNAMED",
+            "-jar", launcher,
+            "-configuration", mason_path .. "/config_linux",
+            "-data", workspace,
+          },
+          root_dir = require("jdtls.setup").find_root({ ".git", "mvnw", "gradlew", "pom.xml", "build.gradle" }),
+          capabilities = require("cmp_nvim_lsp").default_capabilities(),
+          settings = {
+            java = {
+              eclipse = { downloadSources = true },
+              maven   = { downloadSources = true },
+              implementationsCodeLens = { enabled = true },
+              referencesCodeLens      = { enabled = true },
+            },
+          },
+        })
+      end
+
+      -- Called directly for the first Java file (ft = "java" already fired)
+      start_jdtls()
+
+      -- Called for every subsequent Java file in the same session
+      vim.api.nvim_create_autocmd("FileType", {
+        pattern = "java",
+        callback = start_jdtls,
+      })
+
+      -- Java-specific keymaps
+      vim.api.nvim_create_autocmd("LspAttach", {
+        pattern = "*.java",
+        callback = function(args)
+          local jdtls = require("jdtls")
+          local opts  = { buffer = args.buf, silent = true }
+          vim.keymap.set("n", "<leader>oi", jdtls.organize_imports,    opts)
+          vim.keymap.set("n", "<leader>tc", jdtls.test_class,          opts)
+          vim.keymap.set("n", "<leader>tm", jdtls.test_nearest_method, opts)
+        end,
+      })
     end,
   },
 
