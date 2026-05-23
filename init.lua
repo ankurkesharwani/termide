@@ -160,6 +160,15 @@ require("lazy").setup({
       local function start_jdtls()
         local project   = vim.fn.fnamemodify(vim.fn.getcwd(), ":p:h:t")
         local workspace = data_path .. "/jdtls-workspaces/" .. project
+
+        local bundles = {}
+        local debug_jar = vim.fn.glob(
+          data_path .. "/mason/packages/java-debug-adapter/extension/server/com.microsoft.java.debug.plugin-*.jar"
+        )
+        if debug_jar ~= "" then
+          table.insert(bundles, debug_jar)
+        end
+
         require("jdtls").start_or_attach({
           cmd = {
             "java",
@@ -177,6 +186,7 @@ require("lazy").setup({
           },
           root_dir = require("jdtls.setup").find_root({ ".git", "mvnw", "gradlew", "pom.xml", "build.gradle" }),
           capabilities = require("cmp_nvim_lsp").default_capabilities(),
+          init_options = { bundles = bundles },
           settings = {
             java = {
               eclipse = { downloadSources = true },
@@ -206,6 +216,8 @@ require("lazy").setup({
           vim.keymap.set("n", "<leader>oi", jdtls.organize_imports,    opts)
           vim.keymap.set("n", "<leader>tc", jdtls.test_class,          opts)
           vim.keymap.set("n", "<leader>tm", jdtls.test_nearest_method, opts)
+          jdtls.setup_dap({ hotcodereplace = "auto" })
+          require("jdtls.dap").setup_dap_main_class_configs()
         end,
       })
     end,
@@ -242,7 +254,7 @@ require("lazy").setup({
       local dapui  = require("dapui")
 
       require("mason-nvim-dap").setup({
-        ensure_installed = { "codelldb", "python" },
+        ensure_installed = { "codelldb", "python", "java-debug-adapter" },
         handlers = {},
       })
 
@@ -254,7 +266,13 @@ require("lazy").setup({
       dap.listeners.before.event_exited["dapui"]     = function() dapui.close() end
 
       -- Keymaps
-      vim.keymap.set("n", "<F5>",        dap.continue,          { desc = "Debug: continue" })
+      vim.keymap.set("n", "<F5>", function()
+        local launch = vim.fn.getcwd() .. "/.vscode/launch.json"
+        if vim.fn.filereadable(launch) == 1 then
+          require("dap.ext.vscode").load_launchjs(launch, { codelldb = { "c", "cpp", "rust" } })
+        end
+        dap.continue()
+      end, { desc = "Debug: continue" })
       vim.keymap.set("n", "<F10>",       dap.step_over,         { desc = "Debug: step over" })
       vim.keymap.set("n", "<F11>",       dap.step_into,         { desc = "Debug: step into" })
       vim.keymap.set("n", "<F12>",       dap.step_out,          { desc = "Debug: step out" })
