@@ -56,6 +56,12 @@ require("lazy").setup({
         },
       })
       -- <leader>th opens live-preview colorscheme picker
+      vim.keymap.set("n", "<leader>ff", function()
+        require("telescope.builtin").find_files()
+      end, { desc = "Find files" })
+      vim.keymap.set("n", "<leader>fg", function()
+        require("telescope.builtin").live_grep()
+      end, { desc = "Search in files" })
       vim.keymap.set("n", "<leader>th", function()
         require("telescope.builtin").colorscheme({ enable_preview = true })
       end, { desc = "Switch theme" })
