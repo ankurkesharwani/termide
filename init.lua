@@ -13,8 +13,16 @@ vim.g.mapleader = " "
 
 -- Options (set early so they survive any plugin errors)
 vim.opt.termguicolors = true
-vim.opt.number = true
+vim.opt.number        = true
 vim.opt.relativenumber = true
+
+-- Indentation defaults (overridden per-file by EditorConfig or guess-indent)
+vim.opt.expandtab  = true
+vim.opt.shiftwidth = 4
+vim.opt.tabstop    = 4
+
+-- Built-in EditorConfig support (reads .editorconfig from project root)
+vim.g.editorconfig = true
 
 require("lazy").setup({
   -- File manager
@@ -280,6 +288,14 @@ require("lazy").setup({
       vim.keymap.set("n", "<leader>du",  dapui.toggle,          { desc = "Debug: toggle UI" })
       vim.keymap.set("n", "<leader>de",  dapui.eval,            { desc = "Debug: evaluate expression" })
       vim.keymap.set("v", "<leader>de",  dapui.eval,            { desc = "Debug: evaluate selection" })
+    end,
+  },
+
+  -- Auto-detect indentation from file content
+  {
+    "NMAC427/guess-indent.nvim",
+    config = function()
+      require("guess-indent").setup({ auto_cmd = true })
     end,
   },
 
