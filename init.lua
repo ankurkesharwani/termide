@@ -363,7 +363,7 @@ require("lazy").setup({
 })
 
 -- Apply default theme
-pcall(vim.cmd, "colorscheme tokyonight-night")
+pcall(vim.cmd, "colorscheme catppuccin")
 
 -- Window navigation
 vim.keymap.set("n", "<C-h>", "<C-w>h", { silent = true })

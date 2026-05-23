@@ -62,15 +62,15 @@ On startup:
 
 ```
 ┌─────────────────┬──────────────────────────────────┐
-│                 │  buffer1.rs  │  buffer2.java  │   │  ← Buffer tabs (bufferline)
+│                 │  buffer1.rs  │  buffer2.java  │  │  ← Buffer tabs (bufferline)
 │                 ├──────────────────────────────────┤
 │  File Explorer  │                                  │
 │  (nvim-tree)    │         Editor area              │
 │                 │                                  │
 │                 │                                  │
 ├─────────────────┴──────────────────────────────────┤
-│              Terminal (toggleterm)                  │  ← Ctrl+t to show/hide
-└─────────────────────────────────────────────────────┘
+│              Terminal (toggleterm)                 │  ← Ctrl+t to show/hide
+└────────────────────────────────────────────────────┘
 ```
 
 ---
