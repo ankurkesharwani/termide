@@ -278,6 +278,28 @@ require("lazy").setup({
       vim.keymap.set("n", "<F12>",       dap.step_out,          { desc = "Debug: step out" })
       vim.keymap.set("n", "<leader>b",   dap.toggle_breakpoint, { desc = "Debug: toggle breakpoint" })
       vim.keymap.set("n", "<leader>du",  dapui.toggle,          { desc = "Debug: toggle UI" })
+      vim.keymap.set("n", "<leader>de",  dapui.eval,            { desc = "Debug: evaluate expression" })
+      vim.keymap.set("v", "<leader>de",  dapui.eval,            { desc = "Debug: evaluate selection" })
+    end,
+  },
+
+  -- Keybinding helper
+  {
+    "folke/which-key.nvim",
+    event = "VeryLazy",
+    config = function()
+      local wk = require("which-key")
+      wk.setup()
+      wk.add({
+        { "<leader>f",  group = "Find (Telescope)" },
+        { "<leader>t",  group = "Theme" },
+        { "<leader>d",  group = "Debug" },
+        { "<leader>o",  group = "Java: organize" },
+        { "<leader>t",  group = "Java: test" },
+        { "<leader>r",  group = "LSP: rename" },
+        { "<leader>c",  group = "LSP: code action" },
+        { "<leader>e",  group = "LSP: diagnostics" },
+      })
     end,
   },
 
