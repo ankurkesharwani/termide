@@ -80,6 +80,11 @@ require("lazy").setup({
     },
   },
 
+  -- Buffer close
+  {
+    "famiu/bufdelete.nvim",
+  },
+
   -- Buffer tabs at the top
   {
     "akinsho/bufferline.nvim",
@@ -87,6 +92,9 @@ require("lazy").setup({
     config = function()
       require("bufferline").setup({
         options = {
+          custom_filter = function(buf)
+            return vim.fn.bufname(buf) ~= ""
+          end,
           offsets = {
             {
               filetype = "NvimTree",
@@ -112,6 +120,13 @@ vim.keymap.set("n", "<C-l>", "<C-w>l", { silent = true })
 
 -- Toggle file explorer
 vim.keymap.set("n", "<C-b>", "<cmd>NvimTreeToggle<CR>", { silent = true })
+
+-- Close current buffer without closing the window
+vim.keymap.set("n", "<leader>x", function()
+  local is_last = #vim.fn.getbufinfo({ buflisted = 1 }) <= 1
+  require("bufdelete").bufdelete(0, false)
+  if is_last then pcall(vim.cmd, "q") end
+end, { silent = true, desc = "Close buffer" })
 
 -- TAB to cycle through buffers
 vim.keymap.set("n", "<Tab>", "<cmd>BufferLineCycleNext<CR>", { silent = true })
