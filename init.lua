@@ -374,6 +374,13 @@ vim.keymap.set("n", "<C-l>", "<C-w>l", { silent = true })
 -- Exit terminal insert mode with Esc
 vim.keymap.set("t", "<Esc>", "<C-\\><C-n>", { silent = true })
 
+-- Multiple terminals: <leader>t1/t2/t3 to toggle specific terminal instances
+for i = 1, 3 do
+  vim.keymap.set("n", "<leader>t" .. i, function()
+    require("toggleterm").toggle(i)
+  end, { silent = true, desc = "Toggle terminal " .. i })
+end
+
 -- Toggle file explorer
 vim.keymap.set("n", "<C-b>", "<cmd>NvimTreeToggle<CR>", { silent = true })
 
