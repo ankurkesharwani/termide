@@ -35,6 +35,14 @@ require("lazy").setup({
         renderer = { group_empty = true },
         filters = { dotfiles = false },
 
+        -- Remove the default <C-t> behaviour.
+        -- Ween closing terminal using <C-t> focus shifts to nvim-tree
+        -- and accidently using <C-t> once more moved the dir up.
+        on_attach = function(bufnr)
+          local api = require("nvim-tree.api")
+          api.config.mappings.default_on_attach(bufnr)
+          vim.keymap.del("n", "<C-t>", { buffer = bufnr })
+        end,
       })
       vim.api.nvim_create_autocmd("VimEnter", {
         callback = function()
@@ -374,12 +382,6 @@ vim.keymap.set("n", "<C-l>", "<C-w>l", { silent = true })
 -- Exit terminal insert mode with Esc
 vim.keymap.set("t", "<Esc>", "<C-\\><C-n>", { silent = true })
 
--- Multiple terminals: <leader>t1/t2/t3 to toggle specific terminal instances
-for i = 1, 3 do
-  vim.keymap.set("n", "<leader>t" .. i, function()
-    require("toggleterm").toggle(i)
-  end, { silent = true, desc = "Toggle terminal " .. i })
-end
 
 -- Toggle file explorer
 vim.keymap.set("n", "<C-b>", "<cmd>NvimTreeToggle<CR>", { silent = true })
