@@ -60,6 +60,11 @@ require("lazy").setup({
   { "rose-pine/neovim",      name = "rose-pine",  priority = 1000 },
   { "ellisonleao/gruvbox.nvim",           priority = 1000 },
   { "navarasu/onedark.nvim",              priority = 1000 },
+  { "EdenEast/nightfox.nvim",             priority = 1000 },  -- nightfox, carbonfox, nordfox, dawnfox, duskfox, terafox
+  { "sainnhe/everforest",                 priority = 1000 },
+  { "sainnhe/sonokai",                    priority = 1000 },
+  { "projekt0n/github-nvim-theme",        priority = 1000 },
+  { "shaunsingh/nord.nvim",               priority = 1000 },
 
   -- Theme switcher
   {
@@ -371,7 +376,7 @@ require("lazy").setup({
 })
 
 -- Apply default theme
-pcall(vim.cmd, "colorscheme catppuccin")
+pcall(vim.cmd, "colorscheme habamax")
 
 -- Window navigation
 vim.keymap.set("n", "<C-h>", "<C-w>h", { silent = true })
