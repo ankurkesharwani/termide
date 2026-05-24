@@ -414,7 +414,7 @@ For **Python**:
 | `Ctrl+t` | Toggle terminal open/closed |
 | `i` | Enter insert mode (start typing commands) |
 | `Esc` | Exit insert mode (back to Normal mode in terminal) |
-| `Ctrl+l` | Move focus from terminal back to editor |
+| `Ctrl+k` | Move focus from terminal back to editor |
 
 The terminal session persists — if you run a server in it, it keeps running when you hide it.
 Toggle it back with `Ctrl+t` to see the output.
@@ -429,7 +429,7 @@ Press `Enter` to select, `Esc` to cancel.
 
 To make a theme permanent, update this line in `init.lua`:
 ```lua
-pcall(vim.cmd, "colorscheme tokyonight-night")
+pcall(vim.cmd, "colorscheme catppuccin")
 ```
 
 Available themes: `tokyonight-night`, `tokyonight-storm`, `tokyonight-moon`, `catppuccin-mocha`,

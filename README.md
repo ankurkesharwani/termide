@@ -87,7 +87,7 @@ Six themes are installed, all with full treesitter highlight group support:
 | [gruvbox](https://github.com/ellisonleao/gruvbox.nvim) | `gruvbox` |
 | [onedark](https://github.com/navarasu/onedark.nvim) | `onedark` |
 
-Default: `tokyonight-night`. To change permanently, update the `pcall(vim.cmd, "colorscheme ...")` line at the bottom of `init.lua`.
+Default: `catppuccin`. To change permanently, update the `pcall(vim.cmd, "colorscheme ...")` line at the bottom of `init.lua`.
 
 ### Theme Switcher — telescope.nvim
 [nvim-telescope/telescope.nvim](https://github.com/nvim-telescope/telescope.nvim)
