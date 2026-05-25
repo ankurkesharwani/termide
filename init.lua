@@ -310,7 +310,13 @@ require("lazy").setup({
           data_path .. "/mason/packages/java-debug-adapter/extension/server/com.microsoft.java.debug.plugin-*.jar"
         )
         if debug_jar ~= "" then
-          table.insert(bundles, debug_jar)
+          vim.list_extend(bundles, vim.split(debug_jar, "\n"))
+        end
+        local java_test_path = vim.fn.glob(
+          data_path .. "/mason/packages/java-test/extension/server/*.jar"
+        )
+        if java_test_path ~= "" then
+          vim.list_extend(bundles, vim.split(java_test_path, "\n"))
         end
 
         require("jdtls").start_or_attach({
@@ -418,7 +424,9 @@ require("lazy").setup({
           vim.keymap.set("n", "<leader>tc", jdtls.test_class,          opts)
           vim.keymap.set("n", "<leader>tm", jdtls.test_nearest_method, opts)
           jdtls.setup_dap({ hotcodereplace = "auto" })
-          require("jdtls.dap").setup_dap_main_class_configs()
+          vim.defer_fn(function()
+            require("jdtls.dap").setup_dap_main_class_configs()
+          end, 1000)
         end,
       })
     end,
@@ -479,6 +487,22 @@ require("lazy").setup({
       vim.keymap.set("n", "<leader>du",  dapui.toggle,          { desc = "Debug: toggle UI" })
       vim.keymap.set("n", "<leader>de",  dapui.eval,            { desc = "Debug: evaluate expression" })
       vim.keymap.set("v", "<leader>de",  dapui.eval,            { desc = "Debug: evaluate selection" })
+      vim.keymap.set("n", "<leader>da", function()
+        local port = tonumber(vim.fn.input("Attach port: ", "5005"))
+        if not port then return end
+        local ft = vim.bo.filetype
+        local configs = {
+          java   = { type = "java",   request = "attach", name = "Attach", hostName = "127.0.0.1", port = port },
+          python = { type = "python", request = "attach", name = "Attach", connect = { host = "127.0.0.1", port = port } },
+          go     = { type = "go",     request = "attach", name = "Attach", mode = "remote", host = "127.0.0.1", port = port },
+        }
+        local config = configs[ft]
+        if config then
+          dap.run(config)
+        else
+          vim.notify("No attach config for filetype: " .. ft, vim.log.levels.WARN)
+        end
+      end, { desc = "Debug: attach to process" })
     end,
   },
 
