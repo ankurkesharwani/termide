@@ -178,6 +178,20 @@ require("lazy").setup({
       local lombok_jar = data_path .. "/lombok.jar"
       local launcher   = vim.fn.glob(mason_path .. "/plugins/org.eclipse.equinox.launcher_*.jar")
 
+      -- jdtls ships a separate config dir per OS+arch; using the wrong one (e.g.,
+      -- config_linux on macOS) leads to subtle breakage in classloader / agent paths
+      -- (Lombok stops working, DAP can't resolve runtimes, etc.).
+      local jdtls_config_dir = (function()
+        local u = vim.uv.os_uname()
+        if u.sysname == "Darwin" then
+          return u.machine == "arm64" and "config_mac_arm" or "config_mac"
+        elseif u.sysname == "Linux" then
+          return u.machine:match("arm") and "config_linux_arm" or "config_linux"
+        else
+          return "config_win"
+        end
+      end)()
+
       -- Lower number = preferred when multiple vendors share a major version.
       local vendor_rank = { temurin = 1, corretto = 2, zulu = 3, openjdk = 4, oracle = 5 }
 
@@ -298,7 +312,7 @@ require("lazy").setup({
             "--add-opens", "java.base/java.util=ALL-UNNAMED",
             "--add-opens", "java.base/java.lang=ALL-UNNAMED",
             "-jar", launcher,
-            "-configuration", mason_path .. "/config_linux",
+            "-configuration", mason_path .. "/" .. jdtls_config_dir,
             "-data", workspace,
           },
           root_dir = require("jdtls.setup").find_root({ ".git", "mvnw", "gradlew" }),
