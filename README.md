@@ -144,10 +144,38 @@ in the same session).
 curl -L https://projectlombok.org/downloads/lombok.jar -o ~/.local/share/nvim/lombok.jar
 ```
 
-If you switch projects and jdtls behaves strangely, delete the workspace and restart:
-```bash
-rm -rf ~/.local/share/nvim/jdtls-workspaces/<project-name>
+**JDK discovery.** The config does not hardcode a JDK path. On `start_jdtls()` it scans
+common install locations on macOS and Linux:
+- `/Library/Java/JavaVirtualMachines/*/Contents/Home`
+- `/usr/lib/jvm/*`
+- `~/.sdkman/candidates/java/*`
+- `~/.local/share/mise/installs/java/*`
+- `~/.asdf/installs/java/*`
+
+For each JDK it reads `release` to get the actual major version and vendor, then builds
+one `JavaSE-<N>` entry per major version. jdtls picks the right one per project from
+`pom.xml`/`build.gradle`.
+
+**Choosing the default runtime** (used when a project doesn't declare a target):
+1. If `$JAVA_HOME` is set and points to a real JDK, that one wins.
+2. Otherwise, when multiple vendors share a major version, vendor preference
+   (`temurin > corretto > zulu > openjdk > oracle`) breaks the tie. Edit the
+   `vendor_rank` table in `init.lua` to change this.
+3. If `$JAVA_HOME` is unset, the newest discovered version is marked default.
+
+The recommended way to set `JAVA_HOME` per project is **direnv** (`brew install direnv` /
+`dnf install direnv`). Add a gitignored `.envrc` to the project root:
+```sh
+export JAVA_HOME=/path/to/your/jdk
 ```
+Run `direnv allow` once. The `.envrc` is per-machine so paths can differ across macOS/Fedora.
+
+**Commands:**
+- `:JdtlsWhichJava` — print `JAVA_HOME`, discovered runtimes (with the default starred),
+  and currently attached jdtls clients. Use this first when diagnosing.
+- `:JdtlsClearWorkspace` — stop jdtls, delete this project's workspace at
+  `~/.local/share/nvim/jdtls-workspaces/<project-name>`, and restart. Use when jdtls
+  behaves strangely after changing JDKs or build files.
 
 ### Debugging — nvim-dap
 [mfussenegger/nvim-dap](https://github.com/mfussenegger/nvim-dap) +
@@ -341,7 +369,8 @@ When you install Go:
 - **Stuck in the wrong pane?** Use `Ctrl+h/j/k/l` to move around
 - **Which-key popup:** Press `Space` and wait ~1 second to see available bindings
 - **Theme not persisting?** Change `pcall(vim.cmd, "colorscheme ...")` in `init.lua`
-- **jdtls errors after changing config?** Run `rm -rf ~/.local/share/nvim/jdtls-workspaces/` and restart
+- **jdtls errors after changing config?** Run `:JdtlsClearWorkspace` (or `rm -rf ~/.local/share/nvim/jdtls-workspaces/` for all projects) and restart
+- **Wrong Java version in jdtls?** Run `:JdtlsWhichJava` to see what was discovered and which runtime is default
 - **Missing parser?** Run `:TSInstall <language>` or `:TSUpdate`
 - **LSP not starting?** Run `:checkhealth lsp` and `:Mason` to verify server is installed
 - **See all LSP clients on current buffer:** `:lua vim.print(vim.lsp.get_clients())`

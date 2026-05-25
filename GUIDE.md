@@ -315,6 +315,18 @@ Completion triggers automatically as you type. When the completion menu appears:
 | `Space tc` | Run the test class |
 | `Space tm` | Run the nearest test method |
 
+#### Java commands
+
+| Command | What it does |
+|---|---|
+| `:JdtlsWhichJava` | Show `JAVA_HOME`, all discovered JDK runtimes (with the default starred), and the currently attached jdtls client. Run this first when something looks off. |
+| `:JdtlsClearWorkspace` | Delete this project's jdtls workspace (`~/.local/share/nvim/jdtls-workspaces/<project>`) and restart jdtls. Use it after switching JDKs or when jdtls behaves strangely. |
+
+The default JDK is picked from `$JAVA_HOME` if set, else by vendor preference
+(`temurin > corretto > zulu > openjdk > oracle`). The recommended way to pin a JDK per
+project is **direnv** with a gitignored `.envrc` containing `export JAVA_HOME=/path/to/jdk`.
+See the README for details.
+
 ---
 
 ## Debugging
@@ -470,7 +482,7 @@ The file explorer shows the project tree. Use `Space ff` to quickly open any fil
 ### Debugging a Spring Boot app
 
 1. Create `.vscode/launch.json` in the project root (see example above)
-2. Open a Java file (jdtls must be running — check bottom status line)
+2. Open a Java file (jdtls must be running — check bottom status line, or run `:JdtlsWhichJava`)
 3. Set breakpoints with `Space b` on the lines you want to pause at
 4. Press `F5` — the app starts, debug UI opens
 5. When execution hits a breakpoint, use `F10`/`F11`/`F12` to step through
