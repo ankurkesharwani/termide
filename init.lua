@@ -448,19 +448,17 @@ require("lazy").setup({
 
       dapui.setup()
 
+      local vscode = require("dap.ext.vscode")
+      vscode.type_to_filetypes["codelldb"] = { "c", "cpp", "rust" }
+      vscode.type_to_filetypes["java"]     = { "java" }
+
       -- Auto open/close UI with debug session
       dap.listeners.after.event_initialized["dapui"] = function() dapui.open() end
       dap.listeners.before.event_terminated["dapui"] = function() dapui.close() end
       dap.listeners.before.event_exited["dapui"]     = function() dapui.close() end
 
       -- Keymaps
-      vim.keymap.set("n", "<F5>", function()
-        local launch = vim.fn.getcwd() .. "/.vscode/launch.json"
-        if vim.fn.filereadable(launch) == 1 then
-          require("dap.ext.vscode").load_launchjs(launch, { codelldb = { "c", "cpp", "rust" } })
-        end
-        dap.continue()
-      end, { desc = "Debug: continue" })
+      vim.keymap.set("n", "<F5>", dap.continue, { desc = "Debug: continue" })
       vim.keymap.set("n", "<F10>",       dap.step_over,         { desc = "Debug: step over" })
       vim.keymap.set("n", "<F11>",       dap.step_into,         { desc = "Debug: step into" })
       vim.keymap.set("n", "<F12>",       dap.step_out,          { desc = "Debug: step out" })
@@ -531,7 +529,7 @@ require("lazy").setup({
           offsets = {
             {
               filetype = "NvimTree",
-              text = "File Explorer",
+              text = "TermIDE",
               highlight = "Directory",
               separator = true,
             },
