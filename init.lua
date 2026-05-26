@@ -19,4 +19,5 @@ require("lazy").setup("plugins")
 require("config.keymaps")
 
 -- Apply default theme
-pcall(vim.cmd, "colorscheme habamax")
+require("tokyonight").setup({ style = "night" })
+pcall(vim.cmd, "colorscheme tokyonight-night")
