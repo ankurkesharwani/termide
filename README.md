@@ -72,6 +72,10 @@ Parsers are auto-installed for: `c`, `rust`, `python`, `bash`, `make`, `java`, `
 
 Also enables smarter indentation via `indent = { enable = true }`.
 
+Treesitter also drives **code folding** — `foldexpr` is set to `v:lua.vim.treesitter.foldexpr()`
+so folds match real semantic boundaries (functions, classes, blocks) per language. Files open
+unfolded (`foldenable = false`, `foldlevel = 99`) so folding stays opt-in.
+
 To manually install/update parsers: `:TSUpdate`
 To check parser health: `:checkhealth nvim-treesitter`
 
@@ -272,6 +276,8 @@ Works for any key sequence. Helps discover bindings without consulting this file
 | Key | Action |
 |---|---|
 | `Enter` | Open file |
+| `l` | Expand folder / open file |
+| `h` | Collapse current folder (jumps to parent) |
 | `Ctrl+v` | Open in vertical split |
 | `Ctrl+x` | Open in horizontal split |
 | `a` | Create file (end with `/` for folder) |
@@ -287,6 +293,7 @@ Works for any key sequence. Helps discover bindings without consulting this file
 |---|---|
 | `Space ff` | Fuzzy find files by name |
 | `Space fg` | Live grep (search file contents) |
+| `Space fm` | Find methods/functions in current buffer (LSP, regex fallback) |
 | `Space th` | Theme switcher with live preview |
 
 ### LSP
@@ -333,6 +340,19 @@ Works for any key sequence. Helps discover bindings without consulting this file
 | `Enter` | Confirm completion |
 | `Ctrl+Space` | Force open completion |
 | `Ctrl+e` | Abort completion |
+
+### Code Folding
+
+Folds are computed by treesitter. `<leader>z<N>` is a custom shortcut; the rest are built-in Vim.
+
+| Key | Action |
+|---|---|
+| `Space z0` … `Space z9` | Set fold depth: `z0` folds everything, `z1` keeps only top-level visible (folds methods inside a class), higher numbers reveal more nesting. `z9` is effectively "open all" since code rarely nests that deep. |
+| `za` | Toggle fold under cursor |
+| `zc` / `zo` | Close / open fold under cursor |
+| `zM` / `zR` | Close all / open all folds in buffer |
+| `zm` / `zr` | Fold one level deeper / unfold one level |
+| `zj` / `zk` | Jump to next / previous fold |
 
 ---
 
@@ -384,6 +404,7 @@ When you install Go:
 
 ## Tips & Tricks
 
+- **Open the usage guide:** run `:Guide` from anywhere to open `GUIDE.md` in a buffer
 - **Stuck in the wrong pane?** Use `Ctrl+h/j/k/l` to move around
 - **Which-key popup:** Press `Space` and wait ~1 second to see available bindings
 - **Theme not persisting?** Change `pcall(vim.cmd, "colorscheme ...")` in `init.lua`

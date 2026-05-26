@@ -21,6 +21,12 @@ vim.opt.expandtab  = true
 vim.opt.shiftwidth = 4
 vim.opt.tabstop    = 4
 
+-- Code folding (driven by treesitter; files open unfolded)
+vim.opt.foldmethod = "expr"
+vim.opt.foldexpr   = "v:lua.vim.treesitter.foldexpr()"
+vim.opt.foldenable = false
+vim.opt.foldlevel  = 99
+
 -- Built-in EditorConfig support (reads .editorconfig from project root)
 vim.g.editorconfig = true
 
@@ -42,6 +48,13 @@ require("lazy").setup({
           local api = require("nvim-tree.api")
           api.config.mappings.default_on_attach(bufnr)
           vim.keymap.del("n", "<C-t>", { buffer = bufnr })
+
+          -- h / l for folder collapse / expand (file-manager style)
+          local opts = function(desc)
+            return { buffer = bufnr, silent = true, nowait = true, desc = "nvim-tree: " .. desc }
+          end
+          vim.keymap.set("n", "l", api.node.open.edit,          opts("open file / expand folder"))
+          vim.keymap.set("n", "h", api.node.navigate.parent_close, opts("close parent folder"))
         end,
       })
       vim.api.nvim_create_autocmd("VimEnter", {
@@ -555,6 +568,37 @@ vim.keymap.set("t", "<Esc>", "<C-\\><C-n>", { silent = true })
 
 -- Toggle file explorer
 vim.keymap.set("n", "<C-b>", "<cmd>NvimTreeToggle<CR>", { silent = true })
+
+-- Code folding shortcuts: <leader>z<N> sets foldlevel to N (0 = fully folded, 9 ~= fully open).
+for i = 0, 9 do
+  vim.keymap.set("n", "<leader>z" .. i, function()
+    vim.opt.foldenable = true
+    vim.opt.foldlevel  = i
+  end, { silent = true, desc = "Fold to level " .. i })
+end
+
+-- :Guide — open this config's GUIDE.md as a read-only buffer
+vim.api.nvim_create_user_command("Guide", function()
+  vim.cmd.edit(vim.fn.stdpath("config") .. "/GUIDE.md")
+  vim.bo.modifiable = false
+  vim.bo.readonly   = true
+end, { desc = "Open the Neovim usage guide (read-only)" })
+
+-- :FindMethods — list method/function definitions in the current buffer
+-- via LSP document symbols.
+vim.api.nvim_create_user_command("FindMethods", function()
+  local clients = vim.lsp.get_clients({ bufnr = 0 })
+  if #clients == 0 then
+    vim.notify("FindMethods: no LSP attached", vim.log.levels.WARN)
+    return
+  end
+  require("telescope.builtin").lsp_document_symbols({
+    symbols = { "method", "function", "constructor" },
+  })
+end, { desc = "List methods/functions in current buffer (LSP)" })
+
+vim.keymap.set("n", "<leader>fm", "<cmd>FindMethods<CR>",
+  { silent = true, desc = "Find methods/functions in current buffer" })
 
 -- Close current buffer without closing the window
 vim.keymap.set("n", "<leader>x", function()
