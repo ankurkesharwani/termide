@@ -9,6 +9,17 @@ vim.keymap.set("n", "<C-l>", "<C-w>l", { silent = true })
 vim.keymap.set("n", "<leader>w", function()
   local step = 3
   local hint = "-- RESIZE --  h/l: width   j/k: height   =: equalize   q/<Esc>: exit"
+
+  -- Save nvim-tree width after each horizontal resize so restores use the right value
+  local function sync_tree_width()
+    for _, win in ipairs(vim.api.nvim_list_wins()) do
+      if vim.bo[vim.api.nvim_win_get_buf(win)].filetype == "NvimTree" then
+        vim.g._nvim_tree_width = vim.api.nvim_win_get_width(win)
+        return
+      end
+    end
+  end
+
   while true do
     vim.cmd("redraw")               -- repaint so the previous resize is visible
     vim.api.nvim_echo({ { hint, "ModeMsg" } }, false, {})
@@ -16,14 +27,17 @@ vim.keymap.set("n", "<leader>w", function()
     if not ok then break end
     if ch == "h" then
       vim.cmd("vertical resize -" .. step)
+      sync_tree_width()
     elseif ch == "l" then
       vim.cmd("vertical resize +" .. step)
+      sync_tree_width()
     elseif ch == "j" then
       vim.cmd("resize -" .. step)
     elseif ch == "k" then
       vim.cmd("resize +" .. step)
     elseif ch == "=" then
       vim.cmd("wincmd =")
+      sync_tree_width()
     else
       break -- q, <Esc>, or any other key exits
     end

@@ -4,8 +4,37 @@ return {
     "nvim-tree/nvim-tree.lua",
     dependencies = { "nvim-tree/nvim-web-devicons" },
     config = function()
+      -- Width is saved by the <leader>w resize submode (keymaps.lua) into
+      -- vim.g._nvim_tree_width so it survives toggle and new-split reflows.
+      vim.g._nvim_tree_width = 30
+
+      local function restore_tree_width()
+        for _, win in ipairs(vim.api.nvim_list_wins()) do
+          if vim.bo[vim.api.nvim_win_get_buf(win)].filetype == "NvimTree" then
+            vim.api.nvim_win_set_width(win, vim.g._nvim_tree_width)
+            return
+          end
+        end
+      end
+
+      -- Restore after toggle-open (tree closed then reopened)
+      vim.api.nvim_create_autocmd("BufWinEnter", {
+        callback = function()
+          if vim.bo.filetype == "NvimTree" then
+            vim.schedule(restore_tree_width)
+          end
+        end,
+      })
+
+      -- Restore after the first file is opened (creates a new split, Vim rebalances).
+      -- Called synchronously so the width is fixed before the first redraw — no flicker.
+      vim.api.nvim_create_autocmd("WinNew", {
+        callback = restore_tree_width,
+      })
+
       require("nvim-tree").setup({
         view = { side = "left", width = 30 },
+        actions = { open_file = { resize_window = false } },
         renderer = { group_empty = true },
         filters = { dotfiles = false },
 
@@ -25,6 +54,7 @@ return {
           vim.keymap.set("n", "h", api.node.navigate.parent_close, opts("close parent folder"))
         end,
       })
+
       vim.api.nvim_create_autocmd("VimEnter", {
         callback = function()
           require("nvim-tree.api").tree.open()

@@ -18,6 +18,17 @@ require("lazy").setup("plugins")
 
 require("config.keymaps")
 
--- Apply default theme
+-- Apply theme: load persisted choice or fall back to default
+local _theme_file = vim.fn.stdpath("data") .. "/colorscheme"
+local _saved_theme = vim.fn.filereadable(_theme_file) == 1 and vim.fn.readfile(_theme_file)[1] or nil
 require("tokyonight").setup({ style = "night" })
-pcall(vim.cmd, "colorscheme tokyonight-night")
+pcall(vim.cmd, "colorscheme " .. (_saved_theme or "tokyonight-night"))
+
+-- Persist colorscheme selection across sessions
+vim.api.nvim_create_autocmd("ColorScheme", {
+  callback = function()
+    if vim.g.colors_name then
+      vim.fn.writefile({ vim.g.colors_name }, _theme_file)
+    end
+  end,
+})
