@@ -7,6 +7,9 @@ return {
     end,
   },
 
+  -- Git integration: :Git <command>, handles rebase/commit editors natively
+  { "tpope/vim-fugitive" },
+
   -- Git change indicators in the sign column
   {
     "lewis6991/gitsigns.nvim",

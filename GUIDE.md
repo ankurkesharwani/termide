@@ -24,6 +24,7 @@ advanced workflows.
 - [LSP Features](#lsp-features)
 - [Debugging](#debugging)
 - [Terminal](#terminal)
+- [Git](#git)
 - [Themes](#themes)
 - [Common Workflows](#common-workflows)
 
@@ -160,6 +161,7 @@ You can have multiple files open side by side.
 | `Ctrl+l`                  | Move focus right                        |
 | `Ctrl+j`                  | Move focus down                         |
 | `Ctrl+k`                  | Move focus up                           |
+| `Space w`                 | Enter resize submode — then tap `h`/`l` to adjust width, `j`/`k` for height, `=` to equalize, any other key exits |
 | `:q`                      | Close current split                     |
 | `:only`                   | Close all splits except the current one |
 
@@ -512,6 +514,48 @@ For **Python**:
 The terminal session persists — if you run a server in it, it keeps running
 when you hide it. Toggle it back with `Ctrl+t` to see the output.
 
+> **Git operations:** For git commands that open an editor (interactive rebase,
+> commit, reword), use `:Git` from the editor instead of running `git` from the
+> terminal. See the [Git](#git) section below.
+
+--------------------------------------------------------------------------------
+
+## Git
+
+Git integration is provided by **vim-fugitive** and **gitsigns**.
+
+### vim-fugitive — running git commands
+
+Use `:Git <command>` instead of running git from the terminal whenever the
+command needs to open an editor. This opens files as normal Neovim buffers
+with full editing support.
+
+| Command | Action |
+|---|---|
+| `:Git rebase -i HEAD~1` | Interactive rebase — opens rebase file as a normal buffer |
+| `:Git commit` | Commit with message — opens commit buffer |
+| `:Git diff` | Show diff in a split |
+| `:Git log` | Show log |
+| `:Git blame` | Line-by-line blame for current file |
+| `:Git` | Git status summary |
+
+For interactive rebase: change `pick` to `r` (reword), `s` (squash), etc.,
+then `:wq`. Each subsequent editor step (commit message, etc.) opens
+automatically. `:wq` each one and git completes.
+
+### gitsigns — hunk operations
+
+Changes in the current file are shown in the sign column (left gutter).
+
+| Key | Action |
+|---|---|
+| `]h` | Jump to next changed hunk |
+| `[h` | Jump to previous changed hunk |
+| `Space hp` | Preview the hunk diff in a float |
+| `Space hs` | Stage the hunk under cursor |
+| `Space hr` | Reset (undo) the hunk under cursor |
+| `Space hb` | Show git blame for the current line |
+
 --------------------------------------------------------------------------------
 
 ## Themes
@@ -520,15 +564,13 @@ Press **`Space th`** to open the theme picker. Scroll through themes — the
 editor live-previews each one as you move the cursor. Press `Enter` to
 select, `Esc` to cancel.
 
-To make a theme permanent, update this line in `init.lua`:
+Your selection is **automatically saved** and restored on next launch — no
+config change needed.
 
-```lua
-pcall(vim.cmd, "colorscheme catppuccin")
-```
-
-Available themes: `tokyonight-night`, `tokyonight-storm`, `tokyonight-moon`,
-`catppuccin-mocha`, `catppuccin-macchiato`, `kanagawa-wave`,
-`kanagawa-dragon`, `rose-pine`, `gruvbox`, `onedark`.
+A large selection is available including: `tokyonight-night/storm/moon`,
+`catppuccin-mocha/macchiato/frappe`, `kanagawa-wave/dragon`, `rose-pine`,
+`gruvbox`, `onedark`, `nightfox`, `everforest`, `sonokai`, `dracula`,
+`nord`, `github-dark`, `monokai`, `eldritch`, `vesper`, `iceberg`, and more.
 
 --------------------------------------------------------------------------------
 
@@ -575,6 +617,15 @@ any file.
 6. Hover `Space de` over variables to inspect their values
 7. Press `F5` again to continue to the next breakpoint
 8. Press `Shift+F5` or `:DapTerminate` to stop the session
+
+### Interactive git rebase
+
+1. From anywhere in Neovim, run `:Git rebase -i HEAD~3` (or however many commits)
+2. The rebase todo file opens as a normal buffer — change `pick` to `r`, `s`, `f`, etc.
+3. `:wq` — git proceeds to the next step (e.g., commit message for a reword)
+4. Edit and `:wq` each subsequent file — git completes when all steps are done
+
+Never use `git rebase -i` from the terminal inside Neovim — use `:Git rebase -i` instead.
 
 ### Comparing two files side by side
 

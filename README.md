@@ -35,11 +35,23 @@ Plugin versions are locked in `lazy-lock.json` — commit this file to reproduce
 
 ## Structure
 
-Everything lives in a single file: `~/.config/nvim/init.lua`.
-
-Options are set at the top before `lazy.setup()` so they survive any plugin errors.
-The plugin list is passed directly to `lazy.setup({...})`.
-Keymaps are at the bottom.
+```
+~/.config/nvim/
+├── init.lua                 # Entry point: bootstraps lazy.nvim, loads modules
+├── lua/
+│   ├── config/
+│   │   ├── options.lua      # vim.opt settings
+│   │   └── keymaps.lua      # keybindings and user commands
+│   └── plugins/
+│       ├── ui.lua           # UI: nvim-tree, bufferline, toggleterm, colorschemes, which-key
+│       ├── misc.lua         # Utilities: fugitive, gitsigns, guess-indent
+│       ├── lsp.lua          # mason, mason-lspconfig, nvim-lspconfig, nvim-cmp
+│       ├── treesitter.lua   # nvim-treesitter
+│       ├── telescope.lua    # telescope.nvim
+│       ├── dap.lua          # nvim-dap, nvim-dap-ui, mason-nvim-dap
+│       └── java.lua         # nvim-jdtls
+└── lazy-lock.json           # locked plugin versions
+```
 
 ---
 
@@ -80,18 +92,12 @@ To manually install/update parsers: `:TSUpdate`
 To check parser health: `:checkhealth nvim-treesitter`
 
 ### Colorschemes
-Six themes are installed, all with full treesitter highlight group support:
 
-| Theme | Variants |
-|---|---|
-| [tokyonight](https://github.com/folke/tokyonight.nvim) | `tokyonight-night`, `tokyonight-storm`, `tokyonight-moon`, `tokyonight-day` |
-| [catppuccin](https://github.com/catppuccin/nvim) | `catppuccin-mocha`, `catppuccin-macchiato`, `catppuccin-frappe`, `catppuccin-latte` |
-| [kanagawa](https://github.com/rebelot/kanagawa.nvim) | `kanagawa-wave`, `kanagawa-dragon`, `kanagawa-lotus` |
-| [rose-pine](https://github.com/rose-pine/neovim) | `rose-pine`, `rose-pine-moon`, `rose-pine-dawn` |
-| [gruvbox](https://github.com/ellisonleao/gruvbox.nvim) | `gruvbox` |
-| [onedark](https://github.com/navarasu/onedark.nvim) | `onedark` |
+Many themes are installed, all with treesitter highlight group support. A large selection is available — use `<leader>th` to live-preview and pick one.
 
-Default: `catppuccin`. To change permanently, update the `pcall(vim.cmd, "colorscheme ...")` line at the bottom of `init.lua`.
+Notable themes: `tokyonight-night/storm/moon/day`, `catppuccin-mocha/macchiato/frappe/latte`, `kanagawa-wave/dragon/lotus`, `rose-pine/moon/dawn`, `gruvbox`, `onedark`, `nightfox/dayfox/dawnfox/duskfox`, `everforest`, `sonokai`, `github-dark/light`, `nord`, `dracula`, `material`, `oxocarbon`, `ayu`, `monokai`, `eldritch`, `vesper`, `solarized-osaka`, `zenbones`, `mellow`, `iceberg`.
+
+Default: `tokyonight-night`. The selected theme is **persisted** across sessions in `~/.local/share/nvim/colorscheme` — use `<leader>th` to change it and it will stick.
 
 ### Theme Switcher — telescope.nvim
 [nvim-telescope/telescope.nvim](https://github.com/nvim-telescope/telescope.nvim)
@@ -235,11 +241,21 @@ Example Spring Boot launch config:
 }
 ```
 
+### Git — vim-fugitive + gitsigns.nvim
+
+**[tpope/vim-fugitive](https://github.com/tpope/vim-fugitive)** — Full git integration via `:Git <command>`. Handles all editor interactions (commit messages, interactive rebase) natively inside Neovim without spawning a nested process.
+
+Key use: `:Git rebase -i HEAD~1` — opens the rebase file as a normal buffer. `:wq` works as expected and git continues.
+
+**[lewis6991/gitsigns.nvim](https://github.com/lewis6991/gitsigns.nvim)** — Git change indicators in the sign column (added/changed/deleted lines). Also provides hunk-level operations.
+
 ### Terminal — toggleterm.nvim
 [akinsho/toggleterm.nvim](https://github.com/akinsho/toggleterm.nvim)
 
 A persistent terminal that opens as a horizontal split at the bottom.
 The session persists between toggles — processes keep running.
+
+> **Note:** For git operations that open an editor (rebase, commit), use `:Git` commands from the editor rather than running `git` from the terminal directly. See the Git section above.
 
 ### Buffer Close — bufdelete.nvim
 [famiu/bufdelete.nvim](https://github.com/famiu/bufdelete.nvim)
@@ -268,6 +284,7 @@ Works for any key sequence. Helps discover bindings without consulting this file
 | `Shift+Tab` | Normal | Previous buffer |
 | `Space x` | Normal | Close current buffer |
 | `Ctrl+h/j/k/l` | Normal | Navigate between panes |
+| `Space w` | Normal | Enter window resize submode (then `h/l` width, `j/k` height, `=` equalize, any other key exits) |
 | `Ctrl+t` | Normal/Terminal | Toggle terminal |
 | `Esc` | Terminal | Exit terminal insert mode |
 
@@ -317,6 +334,17 @@ Works for any key sequence. Helps discover bindings without consulting this file
 | `Space oi` | Organize imports |
 | `Space tc` | Run test class |
 | `Space tm` | Run nearest test method |
+
+### Git (gitsigns)
+
+| Key | Action |
+|---|---|
+| `]h` | Next git hunk |
+| `[h` | Previous git hunk |
+| `Space hp` | Preview hunk diff |
+| `Space hr` | Reset hunk |
+| `Space hs` | Stage hunk |
+| `Space hb` | Blame current line |
 
 ### Debugging
 
@@ -407,7 +435,7 @@ When you install Go:
 - **Open the usage guide:** run `:Guide` from anywhere to open `GUIDE.md` in a buffer
 - **Stuck in the wrong pane?** Use `Ctrl+h/j/k/l` to move around
 - **Which-key popup:** Press `Space` and wait ~1 second to see available bindings
-- **Theme not persisting?** Change `pcall(vim.cmd, "colorscheme ...")` in `init.lua`
+- **Theme not persisting?** Use `<leader>th` to select — it writes to `~/.local/share/nvim/colorscheme` automatically. To set a hardcoded default, change the fallback in `init.lua`: `pcall(vim.cmd, "colorscheme " .. (_saved_theme or "tokyonight-night"))`
 - **jdtls errors after changing config?** Run `:JdtlsClearWorkspace` (or `rm -rf ~/.local/share/nvim/jdtls-workspaces/` for all projects) and restart
 - **Wrong Java version in jdtls?** Run `:JdtlsWhichJava` to see what was discovered and which runtime is default
 - **Missing parser?** Run `:TSInstall <language>` or `:TSUpdate`
