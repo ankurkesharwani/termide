@@ -88,6 +88,10 @@ return {
   { "sam4llis/nvim-tundra",                            priority = 1000 },
   { "datsfilipe/vesper.nvim",                          priority = 1000 },
   { "craftzdog/solarized-osaka.nvim",                  priority = 1000 },
+  -- habamax-adjacent: minimal/clean but more vivid
+  { "zenbones-theme/zenbones.nvim", dependencies = { "rktjmp/lush.nvim" }, priority = 1000 },
+  { "kvrohit/mellow.nvim",                             priority = 1000 },
+  { "cocopon/iceberg.vim",                             priority = 1000 },
 
   -- Keybinding helper
   {
