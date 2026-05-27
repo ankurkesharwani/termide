@@ -1,6 +1,7 @@
 vim.opt.termguicolors  = true
 vim.opt.number         = true
 vim.opt.relativenumber = true
+vim.opt.mouse          = "" -- disable mouse in all modes
 
 -- Indentation defaults (overridden per-file by EditorConfig or guess-indent)
 vim.opt.expandtab  = true

@@ -4,6 +4,33 @@ vim.keymap.set("n", "<C-j>", "<C-w>j", { silent = true })
 vim.keymap.set("n", "<C-k>", "<C-w>k", { silent = true })
 vim.keymap.set("n", "<C-l>", "<C-w>l", { silent = true })
 
+-- Window resize submode: <leader>w enters; then tap keys repeatedly without
+-- re-pressing the prefix. h/l = width, j/k = height, = equalize, q/<Esc> exit.
+vim.keymap.set("n", "<leader>w", function()
+  local step = 3
+  local hint = "-- RESIZE --  h/l: width   j/k: height   =: equalize   q/<Esc>: exit"
+  while true do
+    vim.cmd("redraw")               -- repaint so the previous resize is visible
+    vim.api.nvim_echo({ { hint, "ModeMsg" } }, false, {})
+    local ok, ch = pcall(vim.fn.getcharstr)
+    if not ok then break end
+    if ch == "h" then
+      vim.cmd("vertical resize -" .. step)
+    elseif ch == "l" then
+      vim.cmd("vertical resize +" .. step)
+    elseif ch == "j" then
+      vim.cmd("resize -" .. step)
+    elseif ch == "k" then
+      vim.cmd("resize +" .. step)
+    elseif ch == "=" then
+      vim.cmd("wincmd =")
+    else
+      break -- q, <Esc>, or any other key exits
+    end
+  end
+  vim.api.nvim_echo({ { "" } }, false, {}) -- clear the hint line
+end, { silent = true, desc = "Window resize mode" })
+
 -- Exit terminal insert mode with Esc
 vim.keymap.set("t", "<Esc>", "<C-\\><C-n>", { silent = true })
 
