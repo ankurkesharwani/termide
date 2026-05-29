@@ -9,6 +9,7 @@ return {
         "java", "go", "gomod", "gosum",
         "html", "css", "javascript", "typescript", "tsx",
         "json", "yaml", "toml", "xml",
+        "markdown", "markdown_inline",
         "lua", "vim", "vimdoc",
       },
       highlight = { enable = true },
