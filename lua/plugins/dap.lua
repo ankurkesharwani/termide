@@ -26,15 +26,79 @@ return {
       dap.listeners.before.event_terminated["dapui"] = function() dapui.close() end
       dap.listeners.before.event_exited["dapui"]     = function() dapui.close() end
 
-      -- Register pwa-node adapter (js-debug-adapter)
+      -- ─── JavaScript / TypeScript debugging via vscode-js-debug ──────────────
+      -- nvim-dap is only a DAP *client*. VSCode ships a config-resolution layer
+      -- (legacy-type remap, cwd defaults, runtimeVersion resolution) that nvim
+      -- lacks; we reimplement the important parts here via `enrich_config`.
       local js_debug = vim.fn.glob(
         vim.fn.stdpath("data") .. "/mason/packages/js-debug-adapter/js-debug/src/dapDebugServer.js"
       )
+
       if js_debug ~= "" then
-        dap.adapters["pwa-node"] = {
-          type = "server", host = "localhost", port = "${port}",
-          executable = { command = "node", args = { js_debug, "${port}" } },
-        }
+        -- Build a `type = "server"` adapter. The `server` type is what lets nvim-dap
+        -- reuse this connection for the child sessions vscode-js-debug spawns via
+        -- the `startDebugging` reverse request. `rewrite` maps a legacy launch.json
+        -- type (node/chrome/msedge) to the pwa-* type the standalone adapter actually
+        -- understands (otherwise it errors "Unknown config" and disconnects).
+        local function make_adapter(rewrite)
+          return {
+            type = "server",
+            host = "localhost",
+            port = "${port}",
+            executable = { command = "node", args = { js_debug, "${port}" } },
+            enrich_config = function(config, on_config)
+              local final = vim.deepcopy(config)
+              if rewrite then final.type = rewrite end
+              -- VSCode defaults cwd to the workspace folder; the bare adapter does
+              -- not, which breaks tools that search upward for config (babel,
+              -- tsconfig, .env). Default cwd to Neovim's working directory.
+              if not final.cwd then final.cwd = vim.fn.getcwd() end
+              on_config(final)
+            end,
+          }
+        end
+
+        -- Canonical (pwa-*) types: just supply the cwd default.
+        for _, t in ipairs({ "pwa-node", "pwa-chrome", "pwa-msedge", "pwa-extensionHost", "node-terminal" }) do
+          dap.adapters[t] = make_adapter(nil)
+        end
+        -- Legacy aliases found in most .vscode/launch.json files: remap to pwa-* + cwd.
+        for legacy, pwa in pairs({ node = "pwa-node", chrome = "pwa-chrome", msedge = "pwa-msedge" }) do
+          dap.adapters[legacy] = make_adapter(pwa)
+        end
+
+        -- Make nvim-dap load launch.json entries of these types for JS/TS-family files.
+        local js_fts = { "javascript", "typescript", "javascriptreact", "typescriptreact" }
+        for _, t in ipairs({ "pwa-node", "node", "pwa-chrome", "chrome", "pwa-msedge", "msedge", "node-terminal" }) do
+          vscode.type_to_filetypes[t] = js_fts
+        end
+
+        -- Fallback configs so debugging works even with NO .vscode/launch.json.
+        -- (If a launch.json exists, its entries are offered in addition to these.)
+        for _, ft in ipairs(js_fts) do
+          dap.configurations[ft] = dap.configurations[ft] or {}
+          vim.list_extend(dap.configurations[ft], {
+            {
+              type = "pwa-node", request = "launch", name = "Launch current file",
+              program = "${file}", cwd = "${workspaceFolder}",
+              -- run .ts/.tsx directly; requires `tsx` in the project
+              runtimeExecutable = "node", runtimeArgs = { "--import", "tsx" },
+              skipFiles = { "<node_internals>/**" },
+              sourceMaps = true,
+            },
+            {
+              type = "pwa-node", request = "attach", name = "Attach to process (pick)",
+              processId = require("dap.utils").pick_process,
+              cwd = "${workspaceFolder}",
+              skipFiles = { "<node_internals>/**" },
+            },
+            {
+              type = "pwa-node", request = "attach", name = "Attach on :9229",
+              address = "localhost", port = 9229, -- node --inspect default
+              cwd = "${workspaceFolder}", skipFiles = { "<node_internals>/**" },
+            },
+          })
+        end
       end
 
       -- Keymaps
