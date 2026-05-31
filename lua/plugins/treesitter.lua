@@ -1,25 +1,34 @@
+local is_nvim_012 = vim.version().minor >= 12
+
+local parsers = {
+  "c", "rust", "python", "bash", "make",
+  "java", "go", "gomod", "gosum",
+  "html", "css", "javascript", "typescript", "tsx",
+  "json", "yaml", "toml", "xml",
+  "lua", "vim", "vimdoc",
+  "markdown", "markdown_inline", -- needed by markview.nvim
+}
+
 return {
   {
     "nvim-treesitter/nvim-treesitter",
-    -- Pinned to master explicitly. master is the legacy/stable branch the project
-    -- maintains for Neovim 0.11; the `main` rewrite requires Neovim 0.12 (nightly).
-    -- Pinning also stops `Lazy sync` from auto-switching branches on us.
-    branch = "master",
+    -- main branch: Neovim 0.12+ rewrite (highlight/indent are built into Nvim 0.12)
+    -- master branch: legacy stable for Neovim 0.11 (nvim-treesitter.configs API)
+    branch = is_nvim_012 and "main" or "master",
+    lazy = not is_nvim_012, -- main branch does not support lazy loading
     build = ":TSUpdate",
     config = function()
-      -- On master the configuration entry point is `nvim-treesitter.configs`.
-      require("nvim-treesitter.configs").setup({
-        ensure_installed = {
-          "c", "rust", "python", "bash", "make",
-          "java", "go", "gomod", "gosum",
-          "html", "css", "javascript", "typescript", "tsx",
-          "json", "yaml", "toml", "xml",
-          "lua", "vim", "vimdoc",
-          "markdown", "markdown_inline", -- needed by markview.nvim
-        },
-        highlight = { enable = true },
-        indent    = { enable = true },
-      })
+      if is_nvim_012 then
+        -- main branch: setup() only takes install_dir; parsers installed separately
+        require("nvim-treesitter").install(parsers)
+      else
+        -- master branch: configs module handles everything
+        require("nvim-treesitter.configs").setup({
+          ensure_installed = parsers,
+          highlight = { enable = true },
+          indent    = { enable = true },
+        })
+      end
     end,
   },
 }

@@ -65,33 +65,25 @@ return {
   },
 
   -- Colorschemes
-  { "tanvirtin/monokai.nvim",                          priority = 1000 },
   { "folke/tokyonight.nvim",                           priority = 1000 },
-  { "catppuccin/nvim",            name = "catppuccin", priority = 1000 },
   { "rebelot/kanagawa.nvim",                           priority = 1000 },
-  { "rose-pine/neovim",           name = "rose-pine",  priority = 1000 },
-  { "ellisonleao/gruvbox.nvim",                        priority = 1000 },
-  { "navarasu/onedark.nvim",                           priority = 1000 },
   { "EdenEast/nightfox.nvim",                          priority = 1000 },
+  { "catppuccin/nvim",            name = "catppuccin", priority = 1000 },
+  { "rose-pine/neovim",           name = "rose-pine",  priority = 1000 },
+  { "navarasu/onedark.nvim",                           priority = 1000 },
   { "sainnhe/everforest",                              priority = 1000 },
   { "sainnhe/sonokai",                                 priority = 1000 },
   { "projekt0n/github-nvim-theme",                     priority = 1000 },
-  { "shaunsingh/nord.nvim",                            priority = 1000 },
-  -- Additional themes available in NvChad
-  { "Mofiqul/dracula.nvim",                            priority = 1000 },
   { "marko-cerovac/material.nvim",                     priority = 1000 },
-  { "nyoom-engineering/oxocarbon.nvim",                 priority = 1000 },
   { "Shatur/neovim-ayu",                               priority = 1000 },
   { "olivercederborg/poimandres.nvim",                 priority = 1000 },
   { "savq/melange-nvim",                               priority = 1000 },
-  { "eldritch-theme/eldritch.nvim",                    priority = 1000 },
   { "sam4llis/nvim-tundra",                            priority = 1000 },
   { "datsfilipe/vesper.nvim",                          priority = 1000 },
-  { "craftzdog/solarized-osaka.nvim",                  priority = 1000 },
-  -- habamax-adjacent: minimal/clean but more vivid
-  { "zenbones-theme/zenbones.nvim", dependencies = { "rktjmp/lush.nvim" }, priority = 1000 },
-  { "kvrohit/mellow.nvim",                             priority = 1000 },
-  { "cocopon/iceberg.vim",                             priority = 1000 },
+  { "oxfist/night-owl.nvim",                           priority = 1000 },
+  { "dgox16/oldworld.nvim",                            priority = 1000 },
+  { "uloco/bluloco.nvim",  dependencies = { "rktjmp/lush.nvim" }, priority = 1000 },
+  { "vague-theme/vague.nvim",                          priority = 1000 },
 
   -- Keybinding helper
   {
