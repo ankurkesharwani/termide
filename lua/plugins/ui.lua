@@ -6,7 +6,9 @@ return {
     config = function()
       -- Width is saved by the <leader>w resize submode (keymaps.lua) into
       -- vim.g._nvim_tree_width so it survives toggle and new-split reflows.
-      vim.g._nvim_tree_width = 30
+      local _width_file = vim.fn.stdpath("data") .. "/nvim_tree_width"
+      vim.g._nvim_tree_width = vim.fn.filereadable(_width_file) == 1
+        and tonumber(vim.fn.readfile(_width_file)[1]) or 50
 
       local function restore_tree_width()
         for _, win in ipairs(vim.api.nvim_list_wins()) do
@@ -33,7 +35,7 @@ return {
       })
 
       require("nvim-tree").setup({
-        view = { side = "left", width = 30 },
+        view = { side = "left", width = vim.g._nvim_tree_width },
         actions = { open_file = { resize_window = false } },
         renderer = { group_empty = true },
         filters = { dotfiles = false },

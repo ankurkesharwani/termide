@@ -21,6 +21,9 @@ require("config.keymaps")
 -- Apply theme: load persisted choice or fall back to default
 local _theme_file = vim.fn.stdpath("data") .. "/colorscheme"
 local _saved_theme = vim.fn.filereadable(_theme_file) == 1 and vim.fn.readfile(_theme_file)[1] or nil
+local _sonokai_style_file = vim.fn.stdpath("data") .. "/sonokai_style"
+local _saved_sonokai_style = vim.fn.filereadable(_sonokai_style_file) == 1 and vim.fn.readfile(_sonokai_style_file)[1] or nil
+if _saved_sonokai_style then vim.g.sonokai_style = _saved_sonokai_style end
 require("tokyonight").setup({ style = "night" })
 pcall(vim.cmd, "colorscheme " .. (_saved_theme or "tokyonight-night"))
 

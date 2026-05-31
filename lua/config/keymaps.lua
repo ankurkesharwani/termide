@@ -15,6 +15,7 @@ vim.keymap.set("n", "<leader>w", function()
     for _, win in ipairs(vim.api.nvim_list_wins()) do
       if vim.bo[vim.api.nvim_win_get_buf(win)].filetype == "NvimTree" then
         vim.g._nvim_tree_width = vim.api.nvim_win_get_width(win)
+        vim.fn.writefile({ tostring(vim.g._nvim_tree_width) }, vim.fn.stdpath("data") .. "/nvim_tree_width")
         return
       end
     end
