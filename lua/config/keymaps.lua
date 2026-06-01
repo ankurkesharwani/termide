@@ -46,6 +46,15 @@ vim.keymap.set("n", "<leader>w", function()
   vim.api.nvim_echo({ { "" } }, false, {}) -- clear the hint line
 end, { silent = true, desc = "Window resize mode" })
 
+-- Jumplist navigation (VSCode "Go Back / Go Forward", IntelliJ-style).
+-- <C-,> jumps back, <C-.> jumps forward through the cursor jumplist.
+vim.keymap.set("n", "<C-,>", "<C-o>", { silent = true, desc = "Jump back" })
+vim.keymap.set("n", "<C-.>", "<C-i>", { silent = true, desc = "Jump forward" })
+
+-- Jumplist navigation (VSCode "Go Back / Go Forward").
+-- <C-o> is Vim's native "jump back"; <C-p> jumps forward (adjacent, right hand).
+vim.keymap.set("n", "<C-p>", "<C-i>", { silent = true, desc = "Jump forward" })
+
 -- Exit terminal insert mode with Esc
 vim.keymap.set("t", "<Esc>", "<C-\\><C-n>", { silent = true })
 

@@ -241,6 +241,26 @@ You can also map `:w` to a key if you prefer — ask Claude to add it.
 | `Ctrl+u`        | Scroll half page up                        |
 | `{` / `}`       | Jump between empty lines (paragraphs)      |
 
+### Go Back / Go Forward (jumplist)
+
+Just like **Go Back / Go Forward** in VSCode, Neovim remembers a history of
+your cursor jumps so you can retrace your steps — even across different files.
+
+| Key      | Action       |
+|----------|--------------|
+| `Ctrl+o` | Jump back    |
+| `Ctrl+p` | Jump forward |
+
+Only **big** jumps are recorded — go-to-definition, searches (`/`), `gg`, `G`,
+`{` / `}`, `:42`, and so on. Ordinary `h` `j` `k` `l` line moves are *not*
+tracked, so the history stays useful.
+
+Example: press `gd` to jump to a function's definition, then `Ctrl+o` to return
+to where you were, and `Ctrl+p` to go forward to the definition again.
+
+> `Ctrl+o` is Vim's built-in "jump back". `Ctrl+p` is bound in this config to
+> Vim's built-in forward jump (`Ctrl+i`).
+
 ### Jumping to a line
 
 Type `:42` and press Enter to jump to line 42. Or type `42G` in Normal mode.

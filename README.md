@@ -284,6 +284,8 @@ Works for any key sequence. Helps discover bindings without consulting this file
 | `Shift+Tab` | Normal | Previous buffer |
 | `Space x` | Normal | Close current buffer |
 | `Ctrl+h/j/k/l` | Normal | Navigate between panes |
+| `Ctrl+o` | Normal | Jump back (cursor history / jumplist) |
+| `Ctrl+p` | Normal | Jump forward (cursor history / jumplist) |
 | `Space w` | Normal | Enter window resize submode (then `h/l` width, `j/k` height, `=` equalize, any other key exits) |
 | `Ctrl+t` | Normal/Terminal | Toggle terminal |
 | `Esc` | Terminal | Exit terminal insert mode |
