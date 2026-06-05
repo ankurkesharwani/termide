@@ -131,6 +131,13 @@ return {
     config = function()
       require("bufferline").setup({
         options = {
+          separator_style = "slant",
+          indicator = { style = "underline" },
+          diagnostics = "nvim_lsp",
+          diagnostics_indicator = function(count, level)
+            local icons = { error = "\u{f659} ", warning = "\u{f071} ", info = "\u{f449} ", hint = "\u{f835} " }
+            return (icons[level] or "") .. count
+          end,
           custom_filter = function(buf)
             return vim.fn.bufname(buf) ~= ""
           end,
@@ -139,7 +146,7 @@ return {
               filetype  = "NvimTree",
               text      = "TermIDE",
               highlight = "Directory",
-              separator = true,
+              separator = false,
             },
           },
         },
