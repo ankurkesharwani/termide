@@ -10,6 +10,17 @@ return {
   -- Git integration: :Git <command>, handles rebase/commit editors natively
   { "tpope/vim-fugitive" },
 
+  -- Diff viewer and merge tool
+  {
+    "sindrets/diffview.nvim",
+    config = function()
+      require("diffview").setup()
+      vim.keymap.set("n", "<leader>gd", "<cmd>DiffviewOpen<cr>",          { desc = "Diffview open" })
+      vim.keymap.set("n", "<leader>gh", "<cmd>DiffviewFileHistory %<cr>", { desc = "File history" })
+      vim.keymap.set("n", "<leader>gq", "<cmd>DiffviewClose<cr>",         { desc = "Diffview close" })
+    end,
+  },
+
   -- Git change indicators in the sign column
   {
     "lewis6991/gitsigns.nvim",

@@ -1,4 +1,6 @@
 vim.opt.termguicolors  = true
+vim.opt.title          = true
+vim.opt.titlestring    = "TermIDE"
 vim.opt.number         = true
 vim.opt.relativenumber = true
 -- Mouse: load persisted choice or fall back to disabled

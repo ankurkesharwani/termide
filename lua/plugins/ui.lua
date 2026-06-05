@@ -3,8 +3,7 @@ return {
   {
     "nvim-tree/nvim-tree.lua",
     dependencies = { "nvim-tree/nvim-web-devicons" },
-    config = function()
-      -- Width is saved by the <leader>w resize submode (keymaps.lua) into
+    config = function() -- Width is saved by the <leader>w resize submode (keymaps.lua) into
       -- vim.g._nvim_tree_width so it survives toggle and new-split reflows.
       local _width_file = vim.fn.stdpath("data") .. "/nvim_tree_width"
       vim.g._nvim_tree_width = vim.fn.filereadable(_width_file) == 1
@@ -39,8 +38,7 @@ return {
         actions = { open_file = { resize_window = false } },
         renderer = { group_empty = true },
         filters = { dotfiles = false },
-
-        -- Remove the default <C-t> behaviour.
+-- Remove the default <C-t> behaviour.
         -- When closing terminal using <C-t> focus shifts to nvim-tree
         -- and accidentally using <C-t> once more moved the dir up.
         on_attach = function(bufnr)
@@ -130,7 +128,7 @@ return {
         options = {
           theme = "auto",
           component_separators = { left = "", right = "" },
-          section_separators = { left = "", right = "" },
+          section_separators   = { left = "", right = "" },
         },
         sections = {
           lualine_a = { "mode" },
@@ -140,6 +138,31 @@ return {
           lualine_y = { "progress" },
           lualine_z = { "location" },
         },
+        extensions = {
+          {
+            filetypes = { "NvimTree" },
+            sections = {},
+            inactive_sections = {},
+          },
+        },
+      })
+    end,
+  },
+
+  -- Indentation guide lines
+  {
+    "lukas-reineke/indent-blankline.nvim",
+    main = "ibl",
+    config = function()
+      require("ibl").setup({
+        indent = { char = "│" },
+        scope = { enabled = true },
+      })
+      vim.api.nvim_create_autocmd("FileType", {
+        pattern = "NvimTree",
+        callback = function(ev)
+          require("ibl").setup_buffer(ev.buf, { enabled = true })
+        end,
       })
     end,
   },
@@ -150,12 +173,12 @@ return {
   -- Buffer tabs at the top
   {
     "akinsho/bufferline.nvim",
+    event = "VeryLazy",
     dependencies = { "nvim-tree/nvim-web-devicons" },
     config = function()
       require("bufferline").setup({
         options = {
           separator_style = "slant",
-          indicator = { style = "underline" },
           diagnostics = "nvim_lsp",
           diagnostics_indicator = function(count, level)
             local icons = { error = "\u{f659} ", warning = "\u{f071} ", info = "\u{f449} ", hint = "\u{f835} " }
@@ -167,9 +190,8 @@ return {
           offsets = {
             {
               filetype  = "NvimTree",
-              text      = "TermIDE",
               highlight = "Directory",
-              separator = false,
+              separator = " ",
             },
           },
         },
