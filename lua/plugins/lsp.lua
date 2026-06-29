@@ -18,9 +18,9 @@ return {
           "clangd", "rust_analyzer", "pyright", "bashls",
           "ts_ls", "html", "cssls", "lua_ls", "jdtls",
         },
-        automatic_enable = {
-          exclude = { "jdtls" },
-        },
+        -- Keep LSP attachment controlled by the explicit vim.lsp.enable() list
+        -- below, instead of enabling every Mason-installed server.
+        automatic_enable = false,
       })
 
       -- Completion
@@ -56,6 +56,8 @@ return {
         callback = function(args)
           local opts = { buffer = args.buf, silent = true }
           vim.keymap.set("n", "gd",         vim.lsp.buf.definition,                           opts)
+          vim.keymap.set("n", "<leader>gd", vim.lsp.buf.definition,
+            vim.tbl_extend("force", opts, { desc = "Go to definition" }))
           vim.keymap.set("n", "gI",         require("telescope.builtin").lsp_implementations,  opts)
           vim.keymap.set("n", "gr",         require("telescope.builtin").lsp_references,       opts)
           vim.keymap.set("n", "K",          vim.lsp.buf.hover,               opts)

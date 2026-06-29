@@ -48,6 +48,7 @@ Plugin versions are locked in `lazy-lock.json` — commit this file to reproduce
 │       ├── lsp.lua          # mason, mason-lspconfig, nvim-lspconfig, nvim-cmp
 │       ├── treesitter.lua   # nvim-treesitter
 │       ├── telescope.lua    # telescope.nvim
+│       ├── bookmarks.lua    # harpoon line/function bookmarks
 │       ├── dap.lua          # nvim-dap, nvim-dap-ui, mason-nvim-dap
 │       └── java.lua         # nvim-jdtls
 └── lazy-lock.json           # locked plugin versions
@@ -109,6 +110,17 @@ Telescope is a fuzzy-finder framework used for multiple purposes:
 - LSP references and implementations (`gr`, `gI`)
 
 Requires **ripgrep** for content search: `sudo dnf install ripgrep`
+
+### Bookmarks — harpoon
+[ThePrimeagen/harpoon](https://github.com/ThePrimeagen/harpoon)
+
+Project-local line/function bookmarks for places you jump back to constantly.
+Bookmarks appear as right-aligned markers: `B>` for exact line bookmarks and
+`F>` for function/method bookmarks, leaving the sign column free for gitsigns.
+Use `<leader>ma` to bookmark the exact current line, `<leader>mf` to bookmark
+the containing function/method, `<leader>ml` to list bookmarks, and
+`<leader>mr` to remove the bookmark at the cursor. Removal prefers an exact
+line bookmark before the surrounding function/method bookmark.
 
 ### LSP + Completion
 Three plugins work together:
@@ -315,11 +327,20 @@ Works for any key sequence. Helps discover bindings without consulting this file
 | `Space fm` | Find methods/functions in current buffer (LSP, regex fallback) |
 | `Space th` | Theme switcher with live preview |
 
+### Bookmarks (Harpoon)
+
+| Key | Action |
+|---|---|
+| `Space ma` | Bookmark exact current line |
+| `Space mf` | Bookmark containing function/method |
+| `Space ml` | List bookmarks |
+| `Space mr` | Remove bookmark at cursor |
+
 ### LSP
 
 | Key | Action |
 |---|---|
-| `gd` | Go to definition |
+| `gd` / `Space gd` | Go to definition |
 | `gI` | Go to implementation (Telescope) |
 | `gr` | Go to references (Telescope) |
 | `K` | Hover documentation |
@@ -337,10 +358,13 @@ Works for any key sequence. Helps discover bindings without consulting this file
 | `Space tc` | Run test class |
 | `Space tm` | Run nearest test method |
 
-### Git (gitsigns)
+### Git (Diffview + gitsigns)
 
 | Key | Action |
 |---|---|
+| `Space gD` | Open Diffview |
+| `Space gh` | File history |
+| `Space gq` | Close Diffview |
 | `]h` | Next git hunk |
 | `[h` | Previous git hunk |
 | `Space hp` | Preview hunk diff |

@@ -15,6 +15,7 @@ advanced workflows.
 - [The Layout](#the-layout)
 - [Working with Files](#working-with-files)
 - [Working with Buffers (Tabs)](#working-with-buffers-tabs)
+- [Bookmarks](#bookmarks)
 - [Working with Splits](#working-with-splits)
 - [Editing Basics](#editing-basics)
 - [Saving and Quitting](#saving-and-quitting)
@@ -144,6 +145,35 @@ A **buffer** is an open file. The tabs at the top show all open buffers.
 
 When you close the last buffer, the editor pane closes and you are left with
 the file explorer.
+
+--------------------------------------------------------------------------------
+
+## Bookmarks
+
+Bookmarks are powered by Harpoon. They are saved per project, so each repo can
+keep its own short list of important lines, functions, and methods.
+
+Bookmarks are shown at the right edge of bookmarked lines: `B>` marks an exact
+line bookmark, and `F>` marks a function or method bookmark. The git diff
+gutter stays reserved for gitsigns.
+
+| Key        | Action                                      |
+|------------|---------------------------------------------|
+| `Space ma` | Bookmark the exact current line             |
+| `Space mf` | Bookmark the containing function or method  |
+| `Space ml` | List all bookmarks                          |
+| `Space mr` | Remove bookmark at the cursor               |
+
+Use `Space mf` while your cursor is anywhere inside a function or method. The
+bookmark jumps back to that function or method's definition line. Use
+`Space ma` when you care about one exact line, such as a TODO, branch, SQL
+query, or suspicious condition.
+
+`Space mr` removes a line bookmark first if the current line is bookmarked. If
+not, it removes the surrounding function/method bookmark when one exists.
+
+Inside the bookmark list, press `Enter` to open the selected item, `Ctrl+v` to
+open it in a vertical split, or `Ctrl+x` to open it in a horizontal split.
 
 --------------------------------------------------------------------------------
 
@@ -366,7 +396,7 @@ status line.
 
 | Key      | Action                                                        |
 |----------|---------------------------------------------------------------|
-| `gd`     | Go to definition — jumps to where a function/class is defined |
+| `gd` / `Space gd` | Go to definition — jumps to where a function/class is defined |
 | `gI`     | Go to implementation — for interfaces, jumps to concrete impl |
 | `gr`     | Go to references — shows all places this symbol is used       |
 | `Ctrl+o` | Jump back (after a `gd`/`gI` jump)                            |
@@ -562,6 +592,14 @@ with full editing support.
 For interactive rebase: change `pick` to `r` (reword), `s` (squash), etc.,
 then `:wq`. Each subsequent editor step (commit message, etc.) opens
 automatically. `:wq` each one and git completes.
+
+### Diffview — visual git diffs
+
+| Key        | Action                                 |
+|------------|----------------------------------------|
+| `Space gD` | Open Diffview                          |
+| `Space gh` | Show file history for the current file |
+| `Space gq` | Close Diffview                         |
 
 ### gitsigns — hunk operations
 

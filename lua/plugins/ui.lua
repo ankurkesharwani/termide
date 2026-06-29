@@ -94,8 +94,10 @@ return {
       wk.setup()
       wk.add({
         { "<leader>f", group = "Find (Telescope)" },
+        { "<leader>g", group = "Git" },
         { "<leader>t", group = "Theme" },
         { "<leader>d", group = "Debug" },
+        { "<leader>m", group = "Bookmarks" },
         { "<leader>o", group = "Java: organize" },
         { "<leader>t", group = "Java: test" },
         { "<leader>r", group = "LSP: rename" },
@@ -189,6 +191,7 @@ return {
           end,
           offsets = {
             {
+              text = "TermIDE",
               filetype  = "NvimTree",
               highlight = "Directory",
               separator = " ",
