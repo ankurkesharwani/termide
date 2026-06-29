@@ -18,6 +18,16 @@ vim.api.nvim_create_user_command("MouseDisable", function()
   vim.fn.writefile({ "disabled" }, _mouse_file)
 end, {})
 
+vim.api.nvim_create_user_command("WrapEnable", function()
+  vim.opt_local.wrap = true
+  vim.opt_local.linebreak = true
+end, { desc = "Enable soft wrapping in the current window" })
+
+vim.api.nvim_create_user_command("WrapDisable", function()
+  vim.opt_local.wrap = false
+  vim.opt_local.linebreak = false
+end, { desc = "Disable soft wrapping in the current window" })
+
 -- Indentation defaults (overridden per-file by EditorConfig or guess-indent)
 vim.opt.expandtab  = true
 vim.opt.shiftwidth = 4
