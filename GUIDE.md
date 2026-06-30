@@ -618,17 +618,22 @@ Changes in the current file are shown in the sign column (left gutter).
 
 ## Themes
 
-Press **`Space th`** to open the theme picker. Scroll through themes — the
-editor live-previews each one as you move the cursor. Press `Enter` to
-select, `Esc` to cancel.
+Run **`:ThemeSelect`** to open the theme picker. Scroll through themes — the
+editor live-previews each one as you move the cursor. Press `Enter` to select,
+`Esc` to cancel.
 
-Your selection is **automatically saved** and restored on next launch — no
-config change needed.
+Run **`:ThemeVariant`** to select a variant for the current theme. You can also
+apply a variant directly, for example `:ThemeVariant espresso` while using
+Sonokai.
 
-A large selection is available including: `tokyonight-night/storm/moon`,
-`catppuccin-mocha/macchiato/frappe`, `kanagawa-wave/dragon`, `rose-pine`,
-`gruvbox`, `onedark`, `nightfox`, `everforest`, `sonokai`, `dracula`,
-`nord`, `github-dark`, `monokai`, `eldritch`, `vesper`, `iceberg`, and more.
+Your theme and variant selections are **automatically saved** and restored on
+next launch — no config change needed.
+
+A large selection is available including: `tokyonight-night/storm/moon/day`,
+`catppuccin-mocha/macchiato/frappe/latte`, `kanagawa-wave/dragon/lotus`,
+`rose-pine-main/moon/dawn`, `onedark`, `nightfox`, `everforest`, `sonokai`,
+`github_dark/light`, `material`, `ayu`, `poimandres`, `melange`, `tundra`,
+`vesper`, `night-owl`, `oldworld`, `bluloco`, `vague`, and more.
 
 --------------------------------------------------------------------------------
 

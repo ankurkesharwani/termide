@@ -94,17 +94,18 @@ To check parser health: `:checkhealth nvim-treesitter`
 
 ### Colorschemes
 
-Many themes are installed, all with treesitter highlight group support. A large selection is available — use `<leader>th` to live-preview and pick one.
+Many themes are installed, all with treesitter highlight group support. Use `:ThemeSelect` to live-preview and pick one.
 
-Notable themes: `tokyonight-night/storm/moon/day`, `catppuccin-mocha/macchiato/frappe/latte`, `kanagawa-wave/dragon/lotus`, `rose-pine/moon/dawn`, `gruvbox`, `onedark`, `nightfox/dayfox/dawnfox/duskfox`, `everforest`, `sonokai`, `github-dark/light`, `nord`, `dracula`, `material`, `oxocarbon`, `ayu`, `monokai`, `eldritch`, `vesper`, `solarized-osaka`, `zenbones`, `mellow`, `iceberg`.
+Notable themes: `tokyonight-night/storm/moon/day`, `catppuccin-mocha/macchiato/frappe/latte`, `kanagawa-wave/dragon/lotus`, `rose-pine-main/moon/dawn`, `onedark`, `nightfox/dayfox/dawnfox/duskfox`, `everforest`, `sonokai`, `github_dark/light`, `material`, `ayu`, `poimandres`, `melange`, `tundra`, `vesper`, `night-owl`, `oldworld`, `bluloco`, `vague`.
 
-Default: `tokyonight-night`. The selected theme is **persisted** across sessions in `~/.local/share/nvim/colorscheme` — use `<leader>th` to change it and it will stick.
+Default: `tokyonight-night`. The selected theme is **persisted** across sessions in `~/.local/share/nvim/colorscheme` — use `:ThemeSelect` to change it and it will stick. Use `:ThemeVariant` to select variants for the current theme; those choices are saved in `~/.local/share/nvim/theme_variants.json`.
 
-### Theme Switcher — telescope.nvim
+### Theme Commands — telescope.nvim
 [nvim-telescope/telescope.nvim](https://github.com/nvim-telescope/telescope.nvim)
 
 Telescope is a fuzzy-finder framework used for multiple purposes:
-- Theme switching with live preview (`<leader>th`)
+- Theme switching with live preview (`:ThemeSelect`)
+- Current theme variant selection (`:ThemeVariant`)
 - File search (`<leader>ff`)
 - Content/grep search (`<leader>fg`)
 - LSP references and implementations (`gr`, `gI`)
@@ -325,7 +326,6 @@ Works for any key sequence. Helps discover bindings without consulting this file
 | `Space ff` | Fuzzy find files by name |
 | `Space fg` | Live grep (search file contents) |
 | `Space fm` | Find methods/functions in current buffer (LSP, regex fallback) |
-| `Space th` | Theme switcher with live preview |
 
 ### Bookmarks (Harpoon)
 
@@ -461,7 +461,7 @@ When you install Go:
 - **Open the usage guide:** run `:Guide` from anywhere to open `GUIDE.md` in a buffer
 - **Stuck in the wrong pane?** Use `Ctrl+h/j/k/l` to move around
 - **Which-key popup:** Press `Space` and wait ~1 second to see available bindings
-- **Theme not persisting?** Use `<leader>th` to select — it writes to `~/.local/share/nvim/colorscheme` automatically. To set a hardcoded default, change the fallback in `init.lua`: `pcall(vim.cmd, "colorscheme " .. (_saved_theme or "tokyonight-night"))`
+- **Theme not persisting?** Use `:ThemeSelect` to select — it writes to `~/.local/share/nvim/colorscheme` automatically. To set a hardcoded default, change the fallback in `init.lua`: `pcall(vim.cmd, "colorscheme " .. (_saved_theme or "tokyonight-night"))`
 - **jdtls errors after changing config?** Run `:JdtlsClearWorkspace` (or `rm -rf ~/.local/share/nvim/jdtls-workspaces/` for all projects) and restart
 - **Wrong Java version in jdtls?** Run `:JdtlsWhichJava` to see what was discovered and which runtime is default
 - **Missing parser?** Run `:TSInstall <language>` or `:TSUpdate`
