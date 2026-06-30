@@ -292,7 +292,7 @@ Works for any key sequence. Helps discover bindings without consulting this file
 | Key | Mode | Action |
 |---|---|---|
 | `Space` | — | Leader key |
-| `Ctrl+b` | Normal | Toggle file explorer |
+| `Ctrl+n` | Normal | Toggle file explorer |
 | `Tab` | Normal | Next buffer |
 | `Shift+Tab` | Normal | Previous buffer |
 | `Space x` | Normal | Close current buffer |

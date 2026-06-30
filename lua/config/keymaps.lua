@@ -59,7 +59,7 @@ vim.keymap.set("n", "<C-p>", "<C-i>", { silent = true, desc = "Jump forward" })
 vim.keymap.set("t", "<Esc>", "<C-\\><C-n>", { silent = true })
 
 -- Toggle file explorer
-vim.keymap.set("n", "<C-b>", "<cmd>NvimTreeToggle<CR>", { silent = true })
+vim.keymap.set("n", "<C-n>", "<cmd>NvimTreeToggle<CR>", { silent = true })
 
 -- Code folding shortcuts: <leader>z<N> sets foldlevel to N (0 = fully folded, 9 ~= fully open)
 for i = 0, 9 do

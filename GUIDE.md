@@ -87,7 +87,7 @@ On startup:
 
 ### Opening files
 
-In the **file explorer** (press `Ctrl+b` to toggle, `Ctrl+h` to focus it):
+In the **file explorer** (press `Ctrl+n` to toggle, `Ctrl+h` to focus it):
 
 | Key      | Action                              |
 |----------|-------------------------------------|
