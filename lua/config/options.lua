@@ -3,6 +3,8 @@ vim.opt.title          = true
 vim.opt.titlestring    = "TermIDE"
 vim.opt.number         = true
 vim.opt.relativenumber = true
+vim.opt.wrap           = false
+vim.opt.linebreak      = false
 -- Mouse: load persisted choice or fall back to disabled
 local _mouse_file = vim.fn.stdpath("data") .. "/mouse"
 local _saved_mouse = vim.fn.filereadable(_mouse_file) == 1 and vim.fn.readfile(_mouse_file)[1] or nil
