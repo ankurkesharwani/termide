@@ -80,10 +80,11 @@ Filters out `[No Name]` buffers so empty scratch buffers don't appear as tabs.
 [nvim-treesitter/nvim-treesitter](https://github.com/nvim-treesitter/nvim-treesitter)
 
 Tree-sitter based syntax highlighting — far more accurate than regex-based highlighting.
-Parsers are auto-installed for: `c`, `rust`, `python`, `bash`, `make`, `java`, `go`, `html`, `css`,
-`javascript`, `typescript`, `tsx`, `json`, `yaml`, `toml`, `xml`, `lua`, `vim`, `vimdoc`.
-
-Also enables smarter indentation via `indent = { enable = true }`.
+Uses the `main` branch rewrite (requires Neovim 0.12+), which only installs parsers/queries —
+highlighting and indent are started explicitly via a `FileType` autocmd.
+Parsers are auto-installed for: `c`, `rust`, `python`, `bash`, `make`, `java`, `go`, `gomod`, `gosum`,
+`html`, `css`, `javascript`, `typescript`, `tsx`, `json`, `yaml`, `toml`, `xml`, `lua`, `vim`, `vimdoc`,
+`markdown`, `markdown_inline`.
 
 Treesitter also drives **code folding** — `foldexpr` is set to `v:lua.vim.treesitter.foldexpr()`
 so folds match real semantic boundaries (functions, classes, blocks) per language. Files open

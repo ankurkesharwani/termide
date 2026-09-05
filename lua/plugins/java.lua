@@ -5,7 +5,7 @@ return {
     config = function()
       local data_path  = vim.fn.stdpath("data")
       local mason_path = data_path .. "/mason/packages/jdtls"
-      local lombok_jar = data_path .. "/lombok.jar"
+      local lombok_jar = mason_path .. "/lombok.jar"
       local launcher   = vim.fn.glob(mason_path .. "/plugins/org.eclipse.equinox.launcher_*.jar")
 
       -- jdtls ships a separate config dir per OS+arch; using the wrong one (e.g.,

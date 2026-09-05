@@ -1,5 +1,6 @@
-local is_nvim_012 = vim.version().minor >= 12
-
+-- Requires Neovim 0.12+: uses the nvim-treesitter "main" branch rewrite.
+-- This branch only installs parsers/queries; highlight and indent must be
+-- enabled explicitly (they're no longer turned on by a configs.setup call).
 local parsers = {
   "c", "rust", "python", "bash", "make",
   "java", "go", "gomod", "gosum",
@@ -12,23 +13,23 @@ local parsers = {
 return {
   {
     "nvim-treesitter/nvim-treesitter",
-    -- main branch: Neovim 0.12+ rewrite (highlight/indent are built into Nvim 0.12)
-    -- master branch: legacy stable for Neovim 0.11 (nvim-treesitter.configs API)
-    branch = is_nvim_012 and "main" or "master",
-    lazy = not is_nvim_012, -- main branch does not support lazy loading
+    branch = "main",
+    lazy = false, -- main branch does not support lazy loading
     build = ":TSUpdate",
     config = function()
-      if is_nvim_012 then
-        -- main branch: setup() only takes install_dir; parsers installed separately
-        require("nvim-treesitter").install(parsers)
-      else
-        -- master branch: configs module handles everything
-        require("nvim-treesitter.configs").setup({
-          ensure_installed = parsers,
-          highlight = { enable = true },
-          indent    = { enable = true },
-        })
-      end
+      require("nvim-treesitter").install(parsers)
+
+      -- Filetype names don't always match parser names (e.g. "sh" -> bash,
+      -- "typescriptreact" -> tsx), so try on every filetype and no-op if
+      -- there's no parser installed for it.
+      vim.api.nvim_create_autocmd("FileType", {
+        pattern = "*",
+        callback = function()
+          if pcall(vim.treesitter.start) then
+            vim.bo.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+          end
+        end,
+      })
     end,
   },
 }

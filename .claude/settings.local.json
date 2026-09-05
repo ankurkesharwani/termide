@@ -1,0 +1,38 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git init *)",
+      "Bash(git add *)",
+      "Bash(git commit -m ' *)",
+      "Bash(java --version)",
+      "Read(//home/ankur/.local/share/nvim/mason/packages/jdtls/**)",
+      "Bash(git -C /home/ankur/.config/nvim status)",
+      "Bash(git -C /home/ankur/.config/nvim diff)",
+      "Bash(git -C /home/ankur/.config/nvim add init.lua)",
+      "Bash(git -C /home/ankur/.config/nvim commit -m ' *)",
+      "Bash(git *)",
+      "Bash(xargs ls -la)",
+      "WebFetch(domain:chatgpt.com)",
+      "Read(//home/ankur/.local/share/nvim/mason/packages/java-debug-adapter/extension/server/**)",
+      "Read(//home/ankur/.local/share/nvim/mason/packages/java-test/extension/server/**)",
+      "Read(//home/ankur/Projects/ankur/stellar/service/.vscode/**)",
+      "Bash(chmod +x *)",
+      "WebFetch(domain:github.com)",
+      "Bash(dnf info *)",
+      "Bash(pip show *)",
+      "WebSearch",
+      "Bash(pip3 install *)",
+      "Bash(python3 -m pip --version)",
+      "Bash(python3 -m pip install neovim-remote)",
+      "Bash(dnf list *)",
+      "Bash(python3 -m ensurepip --upgrade)",
+      "Bash(sudo dnf install -y python3-pip)",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "Bash(nvim --version)",
+      "Bash(nvim --headless -c \"lua print\\(vim.version\\(\\).minor\\)\" -c \"q\")",
+      "WebFetch(domain:user-images.githubusercontent.com)",
+      "Bash(xxd)",
+      "Bash(nvim *)"
+    ]
+  }
+}
