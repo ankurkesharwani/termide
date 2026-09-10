@@ -84,7 +84,6 @@ return {
   { "dgox16/oldworld.nvim",                            priority = 1000 },
   { "uloco/bluloco.nvim",  dependencies = { "rktjmp/lush.nvim" }, priority = 1000 },
   { "vague-theme/vague.nvim",                          priority = 1000 },
-  { "zenbones-theme/zenbones.nvim", dependencies = { "rktjmp/lush.nvim" }, priority = 1000 },
 
   -- Keybinding helper
   {

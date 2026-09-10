@@ -205,28 +205,6 @@ M.themes = {
   },
 }
 
--- zenbones.nvim ships a dozen standalone colorschemes (each shows up on its
--- own in :ThemeSelect); every one of them toggles dark/light via 'background'
--- rather than via a separate colorscheme name, so register them uniformly.
-for _, name in ipairs({
-  "zenbones", "zenwritten", "neobones", "vimbones", "rosebones",
-  "forestbones", "nordbones", "tokyobones", "seoulbones", "duckbones",
-  "zenburned", "kanagawabones",
-}) do
-  M.themes[name] = {
-    label = name:sub(1, 1):upper() .. name:sub(2),
-    colorscheme = name,
-    default = "dark",
-    variants = { "dark", "light" },
-    current = function()
-      return vim.o.background
-    end,
-    set = function(value)
-      vim.o.background = value
-    end,
-  }
-end
-
 local function target_colorscheme(entry, value)
   if type(entry.colorscheme) == "function" then
     return entry.colorscheme(value)
@@ -326,7 +304,7 @@ function M.select_theme()
     return
   end
 
-  builtin.colorscheme({ enable_preview = true })
+  builtin.colorscheme({ enable_preview = true, ignore_builtins = true })
 end
 
 function M.select_variant()

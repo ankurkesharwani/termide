@@ -97,7 +97,7 @@ To check parser health: `:checkhealth nvim-treesitter`
 
 Many themes are installed, all with treesitter highlight group support. Use `:ThemeSelect` to live-preview and pick one.
 
-Notable themes: `tokyonight-night/storm/moon/day`, `catppuccin-mocha/macchiato/frappe/latte`, `kanagawa-wave/dragon/lotus`, `rose-pine-main/moon/dawn`, `onedark`, `nightfox/dayfox/dawnfox/duskfox`, `everforest`, `sonokai`, `github_dark/light`, `material`, `ayu`, `poimandres`, `melange`, `tundra`, `vesper`, `night-owl`, `oldworld`, `bluloco`, `vague`, and the zenbones family (`zenbones`, `zenwritten`, `neobones`, `vimbones`, `rosebones`, `forestbones`, `nordbones`, `tokyobones`, `seoulbones`, `duckbones`, `zenburned`, `kanagawabones` — each is its own entry in `:ThemeSelect`, with dark/light as its `:ThemeVariant`).
+Notable themes: `tokyonight-night/storm/moon/day`, `catppuccin-mocha/macchiato/frappe/latte`, `kanagawa-wave/dragon/lotus`, `rose-pine-main/moon/dawn`, `onedark`, `nightfox/dayfox/dawnfox/duskfox`, `everforest`, `sonokai`, `github_dark/light`, `material`, `ayu`, `poimandres`, `melange`, `tundra`, `vesper`, `night-owl`, `oldworld`, `bluloco`, `vague`.
 
 Default: `tokyonight-night`. The selected theme is **persisted** across sessions in `~/.local/share/nvim/colorscheme` — use `:ThemeSelect` to change it and it will stick. Use `:ThemeVariant` to select variants for the current theme; those choices are saved in `~/.local/share/nvim/theme_variants.json`.
 
