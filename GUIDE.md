@@ -633,7 +633,11 @@ A large selection is available including: `tokyonight-night/storm/moon/day`,
 `catppuccin-mocha/macchiato/frappe/latte`, `kanagawa-wave/dragon/lotus`,
 `rose-pine-main/moon/dawn`, `onedark`, `nightfox`, `everforest`, `sonokai`,
 `github_dark/light`, `material`, `ayu`, `poimandres`, `melange`, `tundra`,
-`vesper`, `night-owl`, `oldworld`, `bluloco`, `vague`, and more.
+`vesper`, `night-owl`, `oldworld`, `bluloco`, `vague`, the zenbones family
+(`zenbones`, `zenwritten`, `neobones`, `vimbones`, `rosebones`, `forestbones`,
+`nordbones`, `tokyobones`, `seoulbones`, `duckbones`, `zenburned`,
+`kanagawabones` — each shows up as its own theme in `:ThemeSelect`, with
+`:ThemeVariant dark`/`light` toggling its background), and more.
 
 --------------------------------------------------------------------------------
 
