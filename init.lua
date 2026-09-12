@@ -18,19 +18,9 @@ require("lazy").setup("plugins")
 
 require("config.keymaps")
 
--- Apply theme: load persisted choice or fall back to default
+-- Theme: sync dark/light appearance with the OS.
+-- See :ThemeSetDark, :ThemeSetLight, :ThemeSetFallback, :ThemeSync.
 local _theme_variants = require("config.theme_variants")
 _theme_variants.setup()
-local _theme_file = vim.fn.stdpath("data") .. "/colorscheme"
-local _saved_theme = vim.fn.filereadable(_theme_file) == 1 and vim.fn.readfile(_theme_file)[1] or nil
 require("tokyonight").setup({ style = "night" })
-pcall(vim.cmd, "colorscheme " .. (_saved_theme or "tokyonight-night"))
-
--- Persist colorscheme selection across sessions
-vim.api.nvim_create_autocmd("ColorScheme", {
-  callback = function()
-    if vim.g.colors_name then
-      vim.fn.writefile({ vim.g.colors_name }, _theme_file)
-    end
-  end,
-})
+_theme_variants.sync_appearance({ force = true })

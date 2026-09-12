@@ -329,6 +329,117 @@ function M.complete_variants()
   return entry and entry.variants or {}
 end
 
+-- Light / dark appearance sync --------------------------------------------
+
+M.appearance_defaults = {
+  dark = { family = "nightfox", variant = "duskfox" },
+  light = { family = "nightfox", variant = "dayfox" },
+  fallback = "dark",
+}
+
+local last_background = nil
+
+local function detect_system_background()
+  local uname = vim.loop.os_uname().sysname
+
+  if uname == "Darwin" then
+    local out = vim.fn.system({ "defaults", "read", "-g", "AppleInterfaceStyle" })
+    if vim.v.shell_error == 0 and out:match("Dark") then
+      return "dark"
+    end
+    return "light"
+  end
+
+  -- Linux/BSD: xdg-desktop-portal is DE-agnostic (GNOME, KDE Plasma 5.24+,
+  -- XFCE via xdg-desktop-portal-gtk, wlroots compositors, ...).
+  local portal_out = vim.fn.system({
+    "dbus-send", "--session", "--print-reply",
+    "--dest=org.freedesktop.portal.Desktop",
+    "/org/freedesktop/portal/desktop",
+    "org.freedesktop.portal.Settings.Read",
+    "string:org.freedesktop.appearance", "string:color-scheme",
+  })
+  if vim.v.shell_error == 0 then
+    local variant = portal_out:match("uint32%s+(%d+)")
+    if variant == "1" then
+      return "dark"
+    elseif variant == "2" then
+      return "light"
+    end
+  end
+
+  -- GNOME fallback for systems without a running portal.
+  if vim.fn.executable("gsettings") == 1 then
+    local scheme = vim.fn.system({ "gsettings", "get", "org.gnome.desktop.interface", "color-scheme" })
+    if vim.v.shell_error == 0 then
+      if scheme:match("dark") then
+        return "dark"
+      elseif scheme:match("default") or scheme:match("light") then
+        return "light"
+      end
+    end
+  end
+
+  return nil
+end
+
+local function appearance_state()
+  local s = load_state()
+  s.appearance = s.appearance or {}
+  return s.appearance
+end
+
+local function appearance_pick(mode)
+  return appearance_state()[mode] or M.appearance_defaults[mode]
+end
+
+function M.set_appearance(mode)
+  local family, entry = family_for(vim.g.colors_name)
+  if not family then
+    notify("Current colorscheme is not a registered theme family", vim.log.levels.ERROR)
+    return
+  end
+
+  local variant = current_variant(family, entry)
+  local s = load_state()
+  s.appearance = s.appearance or {}
+  s.appearance[mode] = { family = family, variant = variant }
+  save_state()
+  notify(("Set %s theme to %s (%s)"):format(mode, entry.label or family, variant))
+end
+
+function M.set_fallback(value)
+  if value ~= "dark" and value ~= "light" then
+    notify("Fallback must be 'dark' or 'light'", vim.log.levels.ERROR)
+    return
+  end
+
+  local s = load_state()
+  s.appearance = s.appearance or {}
+  s.appearance.fallback = value
+  save_state()
+  notify("Fallback appearance set to " .. value)
+end
+
+function M.sync_appearance(opts)
+  opts = opts or {}
+
+  local bg = detect_system_background() or appearance_state().fallback or M.appearance_defaults.fallback
+  if not opts.force and bg == last_background then
+    return
+  end
+  last_background = bg
+
+  local pick = appearance_pick(bg)
+  if not pick then
+    notify(("No %s theme configured"):format(bg), vim.log.levels.WARN)
+    return
+  end
+
+  vim.o.background = bg
+  M.apply_variant(pick.family, pick.variant)
+end
+
 function M.setup()
   vim.api.nvim_create_user_command("ThemeSelect", M.select_theme, {
     desc = "Select colorscheme with preview",
@@ -347,9 +458,47 @@ function M.setup()
     desc = "Select variant for current colorscheme",
   })
 
+  vim.api.nvim_create_user_command("ThemeSetDark", function()
+    M.set_appearance("dark")
+  end, { desc = "Save the current theme as the dark appearance" })
+
+  vim.api.nvim_create_user_command("ThemeSetLight", function()
+    M.set_appearance("light")
+  end, { desc = "Save the current theme as the light appearance" })
+
+  vim.api.nvim_create_user_command("ThemeSetFallback", function(opts)
+    if opts.args ~= "" then
+      M.set_fallback(opts.args)
+    else
+      vim.ui.select({ "dark", "light" }, {
+        prompt = "Fallback appearance (used when the system theme can't be detected):",
+      }, function(choice)
+        if choice then
+          M.set_fallback(choice)
+        end
+      end)
+    end
+  end, {
+    nargs = "*",
+    complete = function()
+      return { "dark", "light" }
+    end,
+    desc = "Set which appearance to use when the system theme can't be detected",
+  })
+
+  vim.api.nvim_create_user_command("ThemeSync", function()
+    M.sync_appearance({ force = true })
+  end, { desc = "Re-sync theme with the system's light/dark appearance" })
+
   vim.api.nvim_create_autocmd("ColorSchemePre", {
     callback = function(args)
       M.apply_saved_variant(args.match)
+    end,
+  })
+
+  vim.api.nvim_create_autocmd("FocusGained", {
+    callback = function()
+      M.sync_appearance()
     end,
   })
 end
