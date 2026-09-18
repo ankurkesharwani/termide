@@ -1,0 +1,10 @@
+std = "vim"
+
+[lints]
+# lazy.nvim plugin specs are intentionally mixed tables ({ "author/repo", opt = true, ... })
+mixed_table = "allow"
+# Compact single-line `if cond then stmt end` is this config's established style
+multiple_statements = "allow"
+# selene only validates \u{}/\x/\z escapes under its Roblox (Luau) mode, but
+# Neovim's LuaJIT supports them natively (used for icon codepoints, etc.)
+bad_string_escape = "allow"

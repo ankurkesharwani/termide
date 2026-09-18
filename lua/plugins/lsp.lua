@@ -1,5 +1,10 @@
 return {
   {
+    "folke/lazydev.nvim",
+    ft = "lua",
+    opts = {},
+  },
+  {
     "neovim/nvim-lspconfig",
     dependencies = {
       "williamboman/mason.nvim",
@@ -10,6 +15,7 @@ return {
       "hrsh7th/cmp-path",
       "L3MON4D3/LuaSnip",
       "saadparwaiz1/cmp_luasnip",
+      "folke/lazydev.nvim",
     },
     config = function()
       require("mason").setup()
@@ -57,7 +63,7 @@ return {
           local opts = { buffer = args.buf, silent = true }
           vim.keymap.set("n", "gd",         vim.lsp.buf.definition,                           opts)
           vim.keymap.set("n", "<leader>gd", vim.lsp.buf.definition,
-            vim.tbl_extend("force", opts, { desc = "Go to definition" }))
+          vim.tbl_extend("force", opts, { desc = "Go to definition" }))
           vim.keymap.set("n", "gI",         require("telescope.builtin").lsp_implementations,  opts)
           vim.keymap.set("n", "gr",         require("telescope.builtin").lsp_references,       opts)
           vim.keymap.set("n", "K",          vim.lsp.buf.hover,               opts)
