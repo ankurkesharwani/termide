@@ -17,7 +17,9 @@ return {
     lazy = false, -- main branch does not support lazy loading
     build = ":TSUpdate",
     config = function()
-      require("nvim-treesitter").install(parsers)
+      -- install() is async; wait() blocks so parsers are ready before we
+      -- try to start highlighting on FileType below (bootstrapping case).
+      require("nvim-treesitter").install(parsers):wait(300000)
 
       -- Filetype names don't always match parser names (e.g. "sh" -> bash,
       -- "typescriptreact" -> tsx), so try on every filetype and no-op if

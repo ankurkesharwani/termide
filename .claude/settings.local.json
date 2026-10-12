@@ -32,7 +32,9 @@
       "Bash(nvim --headless -c \"lua print\\(vim.version\\(\\).minor\\)\" -c \"q\")",
       "WebFetch(domain:user-images.githubusercontent.com)",
       "Bash(xxd)",
-      "Bash(nvim *)"
+      "Bash(nvim *)",
+      "Read(//Users/ankurkesharwani/.local/share/nvim/**)",
+      "Read(//opt/homebrew/Cellar/neovim/0.12.5_1/share/nvim/runtime/**)"
     ]
   }
 }
