@@ -68,6 +68,7 @@ Configuration:
 - Width: 30 columns
 - Left side
 - Shows dotfiles
+- Run `:TreeToggleIgnoredFiles` or press `<leader>ti` to show or hide Git-ignored files
 
 ### Buffer Tabs — bufferline.nvim
 [akinsho/bufferline.nvim](https://github.com/akinsho/bufferline.nvim)

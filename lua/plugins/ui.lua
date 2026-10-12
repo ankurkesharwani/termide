@@ -55,6 +55,14 @@ return {
         end,
       })
 
+      vim.api.nvim_create_user_command("TreeToggleIgnoredFiles", function()
+        require("nvim-tree.api").filter.git.ignored.toggle()
+      end, { desc = "Toggle visibility of Git-ignored files in NvimTree" })
+      vim.keymap.set("n", "<leader>ti", "<cmd>TreeToggleIgnoredFiles<CR>", {
+        silent = true,
+        desc = "NvimTree: toggle Git-ignored files",
+      })
+
       vim.api.nvim_create_autocmd("VimEnter", {
         callback = function()
           require("nvim-tree.api").tree.open()
